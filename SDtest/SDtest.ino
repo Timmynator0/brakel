@@ -1,16 +1,24 @@
 #include <SD.h>
-
+#include <Time.h>
+#include <string.h>
 File myFile;
 int i ;
+int daycount;
+int nodeCount;
+int nodeValue;
 void setup()
 {
  // Open serial communications and wait for port to open:
   Serial.begin(9600);
-   while (!Serial) {
+   while (!Serial) 
+   {
     ; // wait for serial port to connect. Needed for Leonardo only
-  }
+   }
+   
+   nodeCount = 0;
+     Serial.println("initialization done., waiting 5 seconds for SD :3");
 
-
+  delay(5000);
   Serial.print("Initializing SD card...");
   // On the Ethernet Shield, CS is pin 4. It's set as an output by default.
   // Note that even if it's not used as the CS pin, the hardware SS pin 
@@ -18,51 +26,89 @@ void setup()
   // or the SD library functions will not work. 
    pinMode(10, OUTPUT);
    
-  if (!SD.begin(4)) {
+  if (!SD.begin(4)) 
+  {
     Serial.println("initialization failed!");
     return;
   }
-  Serial.println("initialization done.");
+   Serial.println("initialization done.");
 }
-bool done = false;
+
 void loop()
-{//
- // while(i != 1000)
-////	  WriteSD();
-//  
-  //if(!done)
- // {
-	 Serial.println("started reading");
-  ReadSD();
-//  done = false;
-//  }
-  
-	// nothing happens after setup
+{
+	Serial.println("woke up!");
+	time_t t = now();
+	Serial.print("the time is: ");
+	Serial.println(t);
+
+	if(t >= 86400) //if a day has passed, reset the day! 
+	{
+		Serial.println("a day has passed!");
+		setTime(0); // day has passed, reset the day!
+		daycount++;
+		i = 0;
+	} 
+	
+	//Serial.println(t);
+	WriteSD();
+
+	//Serial.println("started reading");
+	//ReadSD();
+	Serial.println("sleeping!");
+	delay(300000); //wait 5 minutes, start  300000ms
 }
 
 void WriteSD()
 {
 	
-  // open the file. note that only one file can be open at a time,
-  // so you have to close this one before opening another.
-  myFile = SD.open("test.txt", FILE_WRITE);
-  
+  String Filename = "logs/";
+	String days = String(daycount);
+	String extension = ".txt";
+	String string = "" ;
+	
+	
+	days.concat(".txt");
+	Filename.concat(days);
+	Serial.print("file is: ");
+	Serial.println(Filename);
+	//char * buff;j
+	 //char * filename = days.toCharArray(buff,10,0);
+	 char __dataFileName[sizeof(Filename)];
+    Filename.toCharArray(__dataFileName, sizeof(__dataFileName));
+
+//days += extension ;
+  myFile = SD.open( __dataFileName , FILE_WRITE);
+  Serial.println(__dataFileName);
   // if the file opened okay, write to it:
-  if (myFile) {
-    //erial.print("Writing to test.txt...");
-//	String data = "Number  test test test !";
-	myFile.print("Number : ");
-	myFile.println(i);
-	Serial.println(i);
-	i ++ ;
+  if (myFile) 
+  {
+
+	//myFile.print(days);
+
+	while(nodeCount != 51)
+	{
+		nodeValue = random(0,50);
+		myFile.print("node : ");
+		myFile.print(nodeCount);
+		myFile.print(" value= ");
+		myFile.println(nodeValue);
+		nodeCount ++;
+	}
+	nodeCount = 0;
+	//myFile.println(" +  write i");
+	Serial.println("i wrote 50 lines");
+
    
     // close the file:
     myFile.close();
     
-  } else {
+  } 
+  else
+  {
     // if the file didn't open, print an error:
     Serial.println("error opening test.txt");
   }
+
   
 }
 
