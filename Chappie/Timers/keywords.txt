@@ -1,0 +1,7 @@
+Timers	KEYWORD2
+Timers	KEYWORD1
+initialize	KEYWORD2
+attachInterruptTimer1	KEYWORD2
+attachInterruptTimer3	KEYWORD2
+attachInterruptTimer4	KEYWORD2
+attachInterruptTimer5
