@@ -1,11 +1,25 @@
 #include <Timers.h>
 #include <Ethernet.h>
 #include <SPI.h>
+#include <XBee1.h>
 
+/**
+ * INTERNET STUFF
+ */
 byte mac[] = { 
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
 IPAddress server(173,194,34,18); // Google
 EthernetClient client;
+
+float temperature = -1;
+float humidity = -1;
+float lightIntensity = -1;
+
+/**
+ * XBEE STUFF 
+ */
+XBee xbee = XBee();
+XBeeResponse resp;
 
 void setup()
 {
@@ -30,12 +44,13 @@ void setup()
     client.println();
   }
   Serial1.begin(9600);
+  xbee.setSerial(Serial);
   initTimers(); 
 }
 
 void initTimers(void)
 {
-  Timers1.initialize(250,1); // delay in milliseconden,which timer
+  Timers1.initialize(500,1); // delay in milliseconden,which timer
   Timers1.attachInterruptTimer1(firstFunction);
 
   Timers3.initialize(1000,3);
@@ -51,11 +66,17 @@ void initTimers(void)
 
 void firstFunction(void)
 {
-  if (client.available()) 
-  {
-    char c = client.read();
-    Serial.print(c);
-  }
+  //  if (client.available()) 
+  //  {
+  //    char c = client.read();
+  //    Serial.print(c);
+  //  }
+  Serial.print("Temperature: ");
+  Serial.println(temperature);
+  Serial.print("Humidity: ");
+  Serial.println(humidity);
+  Serial.print("Light Intensity: ");
+  Serial.println(lightIntensity);
 }
 
 void secondFunction(void)
@@ -75,14 +96,29 @@ void fourthFunction(void)
 
 void loop()
 {
-  // timer.update();
-
-  // if there are incoming bytes available 
-  // from the server, read them and print them:
-  //  if (client.available()) 
-  //  {
-  //    char c = client.read();
-  //    Serial.print(c);
-  //  }
+  xbee.readPacket();
+  if ( xbee.getResponse().isAvailable() )
+  { 
+    // get response
+    resp = xbee.getResponse();
+    if(xbee.getResponse().getApiId() == ZB_IO_SAMPLE_RESPONSE)
+    {
+      ZBRxIoSampleResponse response = ZBRxIoSampleResponse();
+      resp.getZBRxIoSampleResponse(response);
+      if(response.containsAnalog())
+      {
+        //parse and save locally
+        temperature = (response.getAnalog(1)/1023.f*1.22f-0.5f)*100;
+        humidity = response.getAnalog(2)/10.f;
+        lightIntensity = response.getAnalog(3)/10.23f;
+      }
+    }
+  }
+  else
+    Serial.println("No node Available!"); 
 }
+
+
+
+
 
