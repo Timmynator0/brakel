@@ -8,7 +8,7 @@
  */
 byte mac[] = { 
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
-IPAddress server(173,194,34,18); // Google
+IPAddress server(173,194,34,17); // Google
 EthernetClient client;
 
 float temperature = -1;
