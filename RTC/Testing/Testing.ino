@@ -20,7 +20,6 @@ void setup(){
   data.day =ntp.getDate();
 }
 
-
 void loop(){
   
   Serial.println("Started");
