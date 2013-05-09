@@ -3,7 +3,7 @@
 
 // Simple general-purpose date/time class (no TZ / DST / leap second handling!)
 #include "Arduino.h"
-
+#include <string.h>
 
 class DateTime {
 public:
@@ -64,7 +64,8 @@ public:
     void PrintDateTime(DateTime t);
     void PrintDateTime();
     unsigned long sendNTPpacket2(byte *address);
-    void set();
+    void setup();
+    char* getDate();
     
 private:
     

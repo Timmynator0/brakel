@@ -10,6 +10,7 @@
 #include <EthernetUdp.h>
 
 
+
 #define DS1307_ADDRESS 0x68
 #define SECONDS_PER_DAY 86400L
 
@@ -31,7 +32,12 @@ const int NTP_PACKET_SIZE2= 48;
 byte pb2[NTP_PACKET_SIZE2];
 unsigned int localPort2 = 8888;
 
+//File myFile;
 
+int count;
+int daycount;
+int nodeCount;
+int nodeValue;
 
 
 
@@ -270,30 +276,31 @@ DateTime RTC_Millis::now() {
                 ///NTP///
 /////////////////////////////////////////
 void NTP::init(){
-    Serial.begin(9600);
-    
   
     if(getYear()== 2000 || getYear() < 2013)
         sendRequest();
     
-    if(getHour() == 14 && getMinute() == 52 && getSecond() == 0)
+    if(getHour() == 14 && getMinute() == 56 && getSecond() == 0)
         sendRequest();
   
 }
 
 
-void NTP::set(){
+void NTP::setup(){
     
     int DHCP2 = 0;
-    DHCP2 = Ethernet.begin(mac2);
-    if(DHCP2)
-        Serial.println("DHCP Success2");
-    else
-        Serial.println("DHCP Failed");
-    
-    Udp2.begin(localPort2);
+//    DHCP2 = Ethernet.begin(mac2);
+//    if(DHCP2)
+//        Serial.println("DHCP Success");
+//    else
+//        Serial.println("DHCP Failed");
+//    
+//    Udp2.begin(localPort2);
     Wire.begin();
     RTC2.begin();
+    
+    nodeCount = 0;
+
 }
 
 void NTP::sendRequest(){
@@ -383,9 +390,9 @@ void NTP::PrintDateTime(DateTime t)
 
 void NTP::PrintDateTime()
 {
-    DateTime t  = RTC2.now();
+    DateTime t = RTC2.now();
     char datestr[24];
-    sprintf(datestr, "%04d-%02d-%02d  %02d:%02d:%02d  ", t.year(), t.month(), t.day(), t.hour(), t.minute(), t.second());
+    sprintf(datestr, "%02d-%02d-%04d  %02d:%02d:%02d  ", t.day(), t.month(), t.year(), t.hour(), t.minute(), t.second());
     Serial.println(datestr);
 }
 
@@ -410,6 +417,13 @@ int NTP::getMinute(){
 int NTP::getSecond(){
     time = RTC2.now();
     return time.second();
+}
+
+char* NTP::getDate(){
+    DateTime t = RTC2.now();
+    char *result = "T";
+    sprintf(result,"%02d%02d%02d.txt",t.day(),t.month(),t.year());
+    return result;
 }
 
 
