@@ -27,7 +27,7 @@ void loop(){
    
   manager.writeToSD(&data);
 
-//  ntp.init();
+  ntp.init();
  
   
   ntp.PrintDateTime();
