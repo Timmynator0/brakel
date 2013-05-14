@@ -428,8 +428,8 @@ char* NTP::getDateSD(){
 
 DateTime NTP::GetDateTime()
 {
-   return DateTime t = RTC2.now();
-    
+    DateTime t = RTC2.now();
+    return t;
 }
 
     
