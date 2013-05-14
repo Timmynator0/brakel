@@ -66,6 +66,7 @@ public:
     unsigned long sendNTPpacket2(byte *address);
     void setup();
     char* getDateSD();
+	DateTime GetDateTime();
     
 private:
     
