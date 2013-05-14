@@ -14,12 +14,10 @@ xbee_data data;
 char *test;
 void setup(){
   Serial.begin(9600);
-
- 
-  ntp.setup();
-  delay(1000);
   manager.initSD();
-  data.day =ntp.getDateSD();
+  delay(1000);
+  ntp.setup();
+  data.timeStamp = ntp.GetDateTime();
 }
 
 void loop(){
@@ -27,15 +25,17 @@ void loop(){
   Serial.println("Started");
    
   manager.writeToSD(&data);
-
-  ntp.init();
+  Serial.println("Done Writing......");
+//  ntp.init();
  
   
-  ntp.PrintDateTime();
-  Serial.println("Done");
+//  ntp.PrintDateTime();
+  Serial.println("Start Reading......");
   delay(1000);
   
-  
+  manager.readFromSD();
+   Serial.println("Done Reading......");
+  delay(60L * 1000L);
 
 }
 
