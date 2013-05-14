@@ -10,6 +10,8 @@ typedef struct my_xbee {
     char *day;
     int temperatuur;
     int licht;
+    int luchtvochtigheid;
+    int co2;
     int nodeNr;
 }xbee_data;
 

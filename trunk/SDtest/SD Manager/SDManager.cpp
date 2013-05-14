@@ -29,16 +29,33 @@ void SDManager::writeToSD(struct my_xbee *xbee ){
     delay(1000);
     if(myFile){
         Serial.println("Succes opening SD");
-        myFile.print("Temperatuur = ");
-        myFile.print("\t");
-        myFile.print(xbee->temperatuur);
-        myFile.print("\n\n");
+        myFile.print("Temperatuur  = \t");
+        myFile.println(xbee->temperatuur);
+        
+        myFile.print("Licht = \t");
+        myFile.println(0);
+        
+        myFile.print("Co2 =\t");
+        myFile.println(0);
+        myFile.close();
+//        myFile2 = SD.open(xbee->day, FILE_WRITE);
+//        if(myFile2){
+//            myFile2.print("Luchtvochtigheid =\t");
+//            myFile2.println(0);
+//            myFile2.print("Node Nummer = ");
+//            myFile2.println(1);
+//            myFile2.close();
+//        }else{
+//            Serial.println("Error opening SD Second!!");
+//            myFile2.close();
+//        }
         
     }else{
         Serial.println("Error opening SD");
+        myFile.close();
     }
     
-    myFile.close();
+   
 }
 
 void SDManager::readFromSD(){
