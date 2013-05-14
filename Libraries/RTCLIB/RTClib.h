@@ -2,8 +2,12 @@
 // Released to the public domain! Enjoy!
 
 // Simple general-purpose date/time class (no TZ / DST / leap second handling!)
+
+#ifndef __RTCLIB_H__
+#define __RTCLIB_H__
 #include "Arduino.h"
 #include <string.h>
+
 
 class DateTime {
 public:
@@ -75,3 +79,5 @@ private:
     int getMinute();
     int getSecond();
 };
+
+#endif

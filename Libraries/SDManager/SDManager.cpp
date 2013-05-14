@@ -1,14 +1,14 @@
 #include "Arduino.h"
 #include "SDManager.h"
 #include <SD.h>
-
-
+#include <String.h>
 
 void SDManager::initSD(){
  
     
     Serial.println("Waiting 5 seconds for SD ");
     Serial.print("Initializing SD card...");
+    
     pinMode(10, OUTPUT);
     nodeCount = 0;
     delay(5000);
@@ -22,52 +22,53 @@ void SDManager::initSD(){
 }
 
 void SDManager::writeToSD(struct my_xbee *xbee ){
-
-    Serial.println(xbee->day);
     
-    myFile = SD.open(xbee->day, FILE_WRITE);
+    char *result = "                              ";
+    sprintf(result,"%02d%02d%02d.txt",xbee->timeStamp.day(),xbee->timeStamp.month(),xbee->timeStamp.year());
+    Serial.println(result);
+    
+    myFile = SD.open(result, FILE_WRITE);
     delay(1000);
     if(myFile){
         Serial.println("Succes opening SD");
-        myFile.print("Temperatuur  = \t");
-        myFile.println(xbee->temperatuur);
+        myFile.print("Temperatuur   \t\t= ");
+        myFile.println(xbee->temperature);
+
+        myFile.print("Licht  \t\t\t= ");
+        myFile.println(xbee->lightIntensity);
         
-        myFile.print("Licht = \t");
-        myFile.println(0);
+        myFile.print("Co2  \t\t\t= ");
+        myFile.println(xbee->CO2);
         
-        myFile.print("Co2 =\t");
-        myFile.println(0);
+        myFile.print("Humidity  \t\t= ");
+        myFile.println(xbee->humidity);
+        
+        myFile.print("Node Addres Low  \t= ");
+        myFile.println(xbee->nodeAddrLow);
+        
+        myFile.print("Node Addres High  \t= ");
+        myFile.println(xbee->nodeAddrHigh);
+        myFile.println("");
+        
         myFile.close();
-//        myFile2 = SD.open(xbee->day, FILE_WRITE);
-//        if(myFile2){
-//            myFile2.print("Luchtvochtigheid =\t");
-//            myFile2.println(0);
-//            myFile2.print("Node Nummer = ");
-//            myFile2.println(1);
-//            myFile2.close();
-//        }else{
-//            Serial.println("Error opening SD Second!!");
-//            myFile2.close();
-//        }
         
     }else{
         Serial.println("Error opening SD");
-        myFile.close();
+       
     }
     
-   
 }
 
 void SDManager::readFromSD(){
     
     // re-open the file for reading:
-    myFile = SD.open("test.txt");
+    myFile = SD.open("14052013.txt");
     if (myFile) {
-        Serial.println("test.txt:");
+        Serial.println("14052013.txt");
         
         // read from the file until there's nothing else in it:
         while (myFile.available()) {
-            //
+            Serial.write(myFile.read());
             
         }
         Serial.write("DONE READING!");
@@ -75,6 +76,6 @@ void SDManager::readFromSD(){
         myFile.close();
     } else {
         // if the file didn't open, print an error:
-        Serial.println("error opening test.txt");
+        Serial.println("error opening 14052013.txt");
     }
 }
