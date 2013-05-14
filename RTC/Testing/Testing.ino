@@ -14,10 +14,12 @@ xbee_data data;
 char *test;
 void setup(){
   Serial.begin(9600);
- manager.initSD();
+
  
   ntp.setup();
-  data.day =ntp.getDate();
+  delay(1000);
+  manager.initSD();
+  data.day =ntp.getDateSD();
 }
 
 void loop(){
