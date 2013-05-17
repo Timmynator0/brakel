@@ -4,7 +4,7 @@
 #include "Arduino.h"
 #include <RTClib.h>
 
-typedef struct my_xbee{
+typedef struct xbee_data{
     DateTime timeStamp;
     int temperature;
     int lightIntensity;
@@ -12,7 +12,7 @@ typedef struct my_xbee{
     int CO2;
     int nodeAddrLow;
 	int nodeAddrHigh;
-}xbee_data;
+};
 
 
 
