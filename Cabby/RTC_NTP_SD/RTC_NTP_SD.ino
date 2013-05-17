@@ -10,32 +10,36 @@ NTP ntp;
 
 SDManager manager;
 
-xbee_data data;
-char *test;
+
+my_xbee data;
+
 void setup(){
   Serial.begin(9600);
-  manager.initSD();
+   manager.initSD();
+  
   delay(1000);
+  
   ntp.setup();
   data.timeStamp = ntp.GetDateTime();
 }
 
 void loop(){
   
-  Serial.println("Started");
+    Serial.println("Started");
    
-  manager.writeToSD(&data);
-  Serial.println("Done Writing......");
-//  ntp.init();
+//   manager.writeToSD(&data);
+//   Serial.println("Done Writing......");
+//   ntp.init();
  
   
-//  ntp.PrintDateTime();
+ // ntp.PrintDateTime();
   Serial.println("Start Reading......");
   delay(1000);
   
-  manager.readFromSD();
-   Serial.println("Done Reading......");
-  delay(60L * 1000L);
+  manager.readFromSD(&data);
+  Serial.println("Done Reading......");
+  Serial.println(data.humidity);
+    delay(60L * 1000L);
 
 }
 
