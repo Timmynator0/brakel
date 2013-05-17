@@ -6,6 +6,9 @@
 #ifndef __RTCLIB_H__
 #define __RTCLIB_H__
 #include "Arduino.h"
+#include <SPI.h>
+#include <Ethernet.h>
+#include <EthernetUdp.h>
 #include <string.h>
 
 
