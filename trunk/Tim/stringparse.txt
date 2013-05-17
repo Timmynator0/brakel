@@ -1,0 +1,19 @@
+    if(readString.indexOf("?data=") >0 )//does the request have a querystring ?
+    {
+    
+      int start = readString.indexOf('data=');
+      int commaIndex = readString.indexOf(';',start+1);
+      //  Search for the next comma just after the first
+      int secondCommaIndex = readString.indexOf(';', commaIndex+1);
+      //This returns a new String beginning at a particular starting index, and ending just before a second index 
+      String firstValue = readString.substring(start+1, commaIndex);
+      Serial.println("data =");
+      Serial.println(firstValue);
+      String secondValue = readString.substring(commaIndex+1, secondCommaIndex);
+      Serial.println(secondValue);b  
+    
+
+    }
+
+    //clearing string for next read
+    readString="";
