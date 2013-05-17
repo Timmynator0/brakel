@@ -5,9 +5,7 @@
 #include "Arduino.h"
 #include <avr/pgmspace.h>
 #include "RTClib.h"
-#include <SPI.h>
-#include <Ethernet.h>
-#include <EthernetUdp.h>
+
 
 
 
@@ -294,7 +292,7 @@ void NTP::setup(){
 //        Serial.println("DHCP Success");
 //    else
 //        Serial.println("DHCP Failed");
-
+//
 //    Udp2.begin(localPort2);
     Wire.begin();
     RTC2.begin();

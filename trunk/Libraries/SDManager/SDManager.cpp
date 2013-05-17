@@ -9,7 +9,7 @@ void SDManager::initSD(){
     Serial.println("Waiting 5 seconds for SD ");
     Serial.print("Initializing SD card...");
     
-    pinMode(10, OUTPUT);
+    pinMode(53, OUTPUT);
     nodeCount = 0;
     delay(5000);
     
@@ -29,6 +29,7 @@ void SDManager::writeToSD(struct my_xbee *xbee ){
     
     myFile = SD.open(result, FILE_WRITE);
     delay(1000);
+    
     if(myFile){
         Serial.println("Succes opening SD");
         myFile.print("Temperatuur   \t\t= ");
@@ -43,39 +44,154 @@ void SDManager::writeToSD(struct my_xbee *xbee ){
         myFile.print("Humidity  \t\t= ");
         myFile.println(xbee->humidity);
         
-        myFile.print("Node Addres Low  \t= ");
+        myFile.print("NodeAddresLow   \t= ");
         myFile.println(xbee->nodeAddrLow);
         
-        myFile.print("Node Addres High  \t= ");
+        myFile.print("NodeAddresHigh  \t= ");
         myFile.println(xbee->nodeAddrHigh);
         myFile.println("");
         
+        root.close();
         myFile.close();
         
     }else{
         Serial.println("Error opening SD");
-       
     }
     
 }
 
-void SDManager::readFromSD(){
+void SDManager::readFromSD(struct my_xbee *xbee){
     
-    // re-open the file for reading:
+    char character;
+    char results[100];
+    String description = "";
+    String value = "";
+    boolean valid = true;
+    
     myFile = SD.open("14052013.txt");
-    if (myFile) {
-        Serial.println("14052013.txt");
+    delay(1000);
+    if(myFile){
+        Serial.println("Reading from file succes");
+    }else{
+        Serial.println("Failed to read from file");
+    }
+    while (myFile.available()) {
+        character = myFile.read();
+        if(character == '/'){
+            while(character != '\n'){
+                character = myFile.read();
+            };
+        } else if(isalnum(character)){
+               description.concat(character);
+        } else if(character =='='){
+            do {
+                character = myFile.read();
+            } while(character == ' ');
+               
+        if (description == "Temperatuur") {
+            value = "";
+            while(character != '\n') {
+                if(isdigit(character)) {
+                    value.concat(character);
+                } else if(character != '\n') {
+                    // Use of invalid values
+                    valid = false;
+                    xbee->temperature = value.toInt();
+                   
+                }
+                character = myFile.read();
+            };
+         
+            
+        }else if (description == "Licht") {
+            value = "";
+            while(character != '\n') {
+                if(isdigit(character)) {
+                    value.concat(character);
+                } else if(character != '\n') {
+                    // Use of invalid values
+                    valid = false;
+                    xbee->lightIntensity = value.toInt();
+                   
+                }
+                character = myFile.read();
+            };
         
-        // read from the file until there's nothing else in it:
-        while (myFile.available()) {
-            Serial.write(myFile.read());
+            
+        }else if (description == "Co2") {
+            value = "";
+            while(character != '\n') {
+                if(isdigit(character)) {
+                    value.concat(character);
+                } else if(character != '\n') {
+                    // Use of invalid values
+                    valid = false;
+                    xbee->CO2 = value.toInt();
+                }
+                character = myFile.read();
+            };
+            
+            
+        }else if (description == "Humidity") {
+            value = "";
+            while(character != '\n') {
+                if(isdigit(character)) {
+                    value.concat(character);
+                } else if(character != '\n') {
+                    // Use of invalid values
+                    valid = false;
+                    xbee->humidity = value.toInt();
+                    
+                }
+                character = myFile.read();
+            };
+       
+            
+        }else if (description == "NodeAddresLow") {
+            value = "";
+            while(character != '\n') {
+                if(isdigit(character)) {
+                    value.concat(character);
+                } else if(character != '\n') {
+                    // Use of invalid values
+                    valid = false;
+                    xbee->nodeAddrLow = value.toInt();
+                    
+                }
+                character = myFile.read();
+            };
+       
+            
+        }else if (description == "NodeAddresHigh") {
+            value = "";
+            while(character != '\n') {
+                if(isdigit(character)) {
+                    value.concat(character);
+                } else if(character != '\n') {
+                    // Use of invalid values
+                    valid = false;
+                    xbee->nodeAddrHigh = value.toInt();
+               
+                }
+                character = myFile.read();
+            };
+            delay(2000);
             
         }
-        Serial.write("DONE READING!");
-        // close the file:
-        myFile.close();
-    } else {
-        // if the file didn't open, print an error:
-        Serial.println("error opening 14052013.txt");
+            description = "";
+            
+       }
+        
     }
+
+    Serial.write("DONE READING!");
+    root.close();
+    myFile.close();
+
 }
+
+
+
+
+
+//http://jurgen.gaeremyn.be/index.php/arduino/reading-configuration-file-from-an-sd-card.html
