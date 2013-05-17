@@ -287,13 +287,13 @@ void NTP::init(){
 void NTP::setup(){
     
     int DHCP2 = 0;
-//    DHCP2 = Ethernet.begin(mac2);
-//    if(DHCP2)
-//        Serial.println("DHCP Success");
-//    else
-//        Serial.println("DHCP Failed");
-//
-//    Udp2.begin(localPort2);
+    DHCP2 = Ethernet.begin(mac2);
+    if(DHCP2)
+        Serial.println("DHCP Success");
+    else
+        Serial.println("DHCP Failed");
+
+    Udp2.begin(localPort2);
     Wire.begin();
     RTC2.begin();
     
