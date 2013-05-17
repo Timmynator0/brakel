@@ -29,7 +29,7 @@ void loop(){
    
 //   manager.writeToSD(&data);
 //   Serial.println("Done Writing......");
-//   ntp.init();
+   ntp.init();
  
   
  // ntp.PrintDateTime();
