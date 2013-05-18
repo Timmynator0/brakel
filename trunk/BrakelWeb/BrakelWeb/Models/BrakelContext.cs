@@ -16,15 +16,13 @@ namespace BrakelWeb.Models
         {
         }
 
-        public DbSet<Data> Data { get; set; }
+        public DbSet<DataPoint> DataPoints { get; set; }
         public DbSet<Node> Nodes { get; set; }
-        public DbSet<sysdiagram> sysdiagrams { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.Add(new DataMap());
+            modelBuilder.Configurations.Add(new DataPointMap());
             modelBuilder.Configurations.Add(new NodeMap());
-            modelBuilder.Configurations.Add(new sysdiagramMap());
         }
     }
 }

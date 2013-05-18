@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-//using BrakelWeb.Models.Mapping;
 using BrakelWeb.Models;
 
 namespace BrakelWeb
@@ -21,7 +20,7 @@ namespace BrakelWeb
                 var name = "whoop" + autoRand.Next();
 
                 var node = new Node { NodeAdress = name, Location = "bla" , Type = 1 , ObjectActive= true };
-                var data = new Data { Id = autoRand.Next(), NodeAdress = name };
+                var data = new DataPoint { Id = autoRand.Next(), NodeAdress = name };
                 db.Nodes.Add(node);
                 db.SaveChanges();
 

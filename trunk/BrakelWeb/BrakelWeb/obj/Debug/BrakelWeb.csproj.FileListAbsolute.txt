@@ -25,7 +25,6 @@ C:\Users\Tim\Desktop\Brakel\BrakelWeb\BrakelWeb\bin\DotNetOpenAuth.OAuth.Consume
 C:\Users\Tim\Desktop\Brakel\BrakelWeb\BrakelWeb\bin\DotNetOpenAuth.OpenId.xml
 C:\Users\Tim\Desktop\Brakel\BrakelWeb\BrakelWeb\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
 C:\Users\Tim\Desktop\Brakel\BrakelWeb\BrakelWeb\bin\DotNetOpenAuth.AspNet.xml
-C:\Users\Tim\Desktop\Brakel\BrakelWeb\BrakelWeb\obj\Debug\BrakelWeb.csprojResolveAssemblyReference.cache
 C:\Users\Tim\Desktop\Brakel\BrakelWeb\BrakelWeb\obj\Debug\BrakelWeb.dll
 C:\Users\Tim\Desktop\Brakel\BrakelWeb\BrakelWeb\obj\Debug\BrakelWeb.pdb
 C:\Users\Tim\Desktop\Brakel\BrakelWeb\BrakelWeb\bin\Newtonsoft.Json.dll

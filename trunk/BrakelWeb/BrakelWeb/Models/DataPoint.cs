@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BrakelWeb.Models
 {
-    public partial class Data
+    public partial class DataPoint
     {
         public long Id { get; set; }
         public int Time { get; set; }

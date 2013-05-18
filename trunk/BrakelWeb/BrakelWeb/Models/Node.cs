@@ -7,13 +7,13 @@ namespace BrakelWeb.Models
     {
         public Node()
         {
-            this.Data = new List<Data>();
+            this.DataPoints = new List<DataPoint>();
         }
 
         public string NodeAdress { get; set; }
         public string Location { get; set; }
         public short Type { get; set; }
         public Nullable<bool> ObjectActive { get; set; }
-        public virtual ICollection<Data> Data { get; set; }
+        public virtual ICollection<DataPoint> DataPoints { get; set; }
     }
 }

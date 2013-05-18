@@ -3,9 +3,9 @@ using System.Data.Entity.ModelConfiguration;
 
 namespace BrakelWeb.Models.Mapping
 {
-    public class DataMap : EntityTypeConfiguration<Data>
+    public class DataPointMap : EntityTypeConfiguration<DataPoint>
     {
-        public DataMap()
+        public DataPointMap()
         {
             // Primary Key
             this.HasKey(t => t.Id);
@@ -15,10 +15,10 @@ namespace BrakelWeb.Models.Mapping
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
             this.Property(t => t.NodeAdress)
-                .HasMaxLength(8);
+                .HasMaxLength(50);
 
             // Table & Column Mappings
-            this.ToTable("Data");
+            this.ToTable("DataPoint");
             this.Property(t => t.Id).HasColumnName("Id");
             this.Property(t => t.Time).HasColumnName("Time");
             this.Property(t => t.Temperature).HasColumnName("Temperature");
@@ -29,7 +29,7 @@ namespace BrakelWeb.Models.Mapping
 
             // Relationships
             this.HasOptional(t => t.Node)
-                .WithMany(t => t.Data)
+                .WithMany(t => t.DataPoints)
                 .HasForeignKey(d => d.NodeAdress);
 
         }

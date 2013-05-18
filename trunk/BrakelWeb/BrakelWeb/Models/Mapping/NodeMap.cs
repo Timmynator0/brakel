@@ -13,7 +13,7 @@ namespace BrakelWeb.Models.Mapping
             // Properties
             this.Property(t => t.NodeAdress)
                 .IsRequired()
-                .HasMaxLength(8);
+                .HasMaxLength(50);
 
             this.Property(t => t.Location)
                 .HasMaxLength(50);
