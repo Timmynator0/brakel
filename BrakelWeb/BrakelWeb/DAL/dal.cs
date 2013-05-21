@@ -45,7 +45,7 @@ namespace BrakelWeb.DAL
              using (var db = new BrakelContext())
             {
                 var node =  from b in db.Nodes
-                            where b.NodeAdress == nodeAdress
+                            where b.NodeAdress  == nodeAdress
                             select b;            
                 return (Node)node;
             }  
@@ -62,6 +62,20 @@ namespace BrakelWeb.DAL
 
             }
         }
+
+        DataPoint getDataPoint(int id)
+        {
+            using (var db = new BrakelContext())
+            {
+                
+                var datapoint = from b in db.DataPoints
+                                where b.Id == id
+                                select b;
+                return (DataPoint) datapoint;
+            }
+        }
+
+
 
 
    }
