@@ -11,7 +11,7 @@ NTP ntp;
 SDManager manager;
 
 
-my_xbee data;
+xbee_data data;
 
 void setup(){
   Serial.begin(9600);
@@ -20,25 +20,41 @@ void setup(){
   delay(1000);
   
   ntp.setup();
-  data.timeStamp = ntp.GetDateTime();
+  
 }
 
 void loop(){
   
-    Serial.println("Started");
+   Serial.println("Started");
+   ntp.init();
+   data.timeStamp = ntp.GetDateTime();
+   data.temperature = 1;
+   data.lightIntensity = 2;
+   data.CO2 = 3;
+   data.humidity = 4;
+   data.nodeAddrLow = 5;
+   data.nodeAddrHigh = 6;
    
+   //manager.removeFile("17052013.txt");
 //   manager.writeToSD(&data);
 //   Serial.println("Done Writing......");
-   ntp.init();
- 
   
  // ntp.PrintDateTime();
   Serial.println("Start Reading......");
-  delay(1000);
-  
-  manager.readFromSD(&data);
+//  delay(1000);
+//  
+  manager.readFromSD(&data,"19052013.txt");
   Serial.println("Done Reading......");
-  Serial.println(data.humidity);
+////  Serial.println(data.humidity);
+
+  Serial.println("Data is : ");
+  xbee_data* d;
+   d = manager.getData();
+   
+   for(int i = 0; i < manager.getDataSize();i++){
+    Serial.println(d[i].temperature);
+  
+   }
     delay(60L * 1000L);
 
 }
