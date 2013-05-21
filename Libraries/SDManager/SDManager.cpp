@@ -3,6 +3,7 @@
 #include <SD.h>
 #include <String.h>
 
+
 void SDManager::initSD(){
  
     
@@ -21,36 +22,53 @@ void SDManager::initSD(){
 
 }
 
-void SDManager::writeToSD(struct my_xbee *xbee ){
+void SDManager::writeToSD(struct xbee_data *xbee ){
     
     char *result = "                              ";
     sprintf(result,"%02d%02d%02d.txt",xbee->timeStamp.day(),xbee->timeStamp.month(),xbee->timeStamp.year());
     Serial.println(result);
     
+    if(SD.exists(result))
+        filePathCheck = true;
+    else
+        filePathCheck = false;
+    
+    
     myFile = SD.open(result, FILE_WRITE);
     delay(1000);
-    
+
     if(myFile){
         Serial.println("Succes opening SD");
-        myFile.print("Temperatuur   \t\t= ");
-        myFile.println(xbee->temperature);
+        if(!filePathCheck){
+            myFile.print("UnixTime;");
+            myFile.print("Temperatuur;");
+            myFile.print("Licht;");
+            myFile.print("Co2;");
+            myFile.print("Humidity;");
+            myFile.print("NodeAddresLow;");
+            myFile.println("NodeAddresHigh;");
+        }
+ 
+        myFile.print(xbee->timeStamp.unixtime());
+        
+        myFile.print(";");
+        myFile.print(xbee->temperature);
 
-        myFile.print("Licht  \t\t\t= ");
-        myFile.println(xbee->lightIntensity);
+        myFile.print(";");
+        myFile.print(xbee->lightIntensity);
         
-        myFile.print("Co2  \t\t\t= ");
-        myFile.println(xbee->CO2);
+        myFile.print(";");
+        myFile.print(xbee->CO2);
         
-        myFile.print("Humidity  \t\t= ");
-        myFile.println(xbee->humidity);
+        myFile.print(";");
+        myFile.print(xbee->humidity);
         
-        myFile.print("NodeAddresLow   \t= ");
-        myFile.println(xbee->nodeAddrLow);
+        myFile.print(";");
+        myFile.print(xbee->nodeAddrLow);
         
-        myFile.print("NodeAddresHigh  \t= ");
-        myFile.println(xbee->nodeAddrHigh);
-        myFile.println("");
-        
+        myFile.print(";");
+        myFile.print(xbee->nodeAddrHigh);
+        myFile.println(";");
         root.close();
         myFile.close();
         
@@ -60,15 +78,16 @@ void SDManager::writeToSD(struct my_xbee *xbee ){
     
 }
 
-void SDManager::readFromSD(struct my_xbee *xbee){
+void SDManager::readFromSD(struct xbee_data *xbee, char *file){
     
     char character;
     char results[100];
     String description = "";
     String value = "";
+    numberofData = 0;
     boolean valid = true;
     
-    myFile = SD.open("14052013.txt");
+    myFile = SD.open(file);
     delay(1000);
     if(myFile){
         Serial.println("Reading from file succes");
@@ -83,113 +102,98 @@ void SDManager::readFromSD(struct my_xbee *xbee){
             };
         } else if(isalnum(character)){
                description.concat(character);
-        } else if(character =='='){
-            do {
-                character = myFile.read();
-            } while(character == ' ');
-               
-        if (description == "Temperatuur") {
+        } else if(character ==';'){
+//            do {
+//                character = myFile.read();
+//            } while(character == ' ');
+            
+        if (description == "UnixTime") {
             value = "";
             while(character != '\n') {
                 if(isdigit(character)) {
                     value.concat(character);
                 } else if(character != '\n') {
                     // Use of invalid values
-                    valid = false;
-                    xbee->temperature = value.toInt();
+//                    valid = false;
+//                    xbee->temperature = value.toInt();
                    
                 }
                 character = myFile.read();
             };
-         
-            
-        }else if (description == "Licht") {
-            value = "";
-            while(character != '\n') {
-                if(isdigit(character)) {
-                    value.concat(character);
-                } else if(character != '\n') {
-                    // Use of invalid values
-                    valid = false;
-                    xbee->lightIntensity = value.toInt();
-                   
-                }
-                character = myFile.read();
-            };
-        
-            
-        }else if (description == "Co2") {
-            value = "";
-            while(character != '\n') {
-                if(isdigit(character)) {
-                    value.concat(character);
-                } else if(character != '\n') {
-                    // Use of invalid values
-                    valid = false;
-                    xbee->CO2 = value.toInt();
-                }
-                character = myFile.read();
-            };
-            
-            
-        }else if (description == "Humidity") {
-            value = "";
-            while(character != '\n') {
-                if(isdigit(character)) {
-                    value.concat(character);
-                } else if(character != '\n') {
-                    // Use of invalid values
-                    valid = false;
-                    xbee->humidity = value.toInt();
-                    
-                }
-                character = myFile.read();
-            };
-       
-            
-        }else if (description == "NodeAddresLow") {
-            value = "";
-            while(character != '\n') {
-                if(isdigit(character)) {
-                    value.concat(character);
-                } else if(character != '\n') {
-                    // Use of invalid values
-                    valid = false;
-                    xbee->nodeAddrLow = value.toInt();
-                    
-                }
-                character = myFile.read();
-            };
-       
-            
-        }else if (description == "NodeAddresHigh") {
-            value = "";
-            while(character != '\n') {
-                if(isdigit(character)) {
-                    value.concat(character);
-                } else if(character != '\n') {
-                    // Use of invalid values
-                    valid = false;
-                    xbee->nodeAddrHigh = value.toInt();
-               
-                }
-                character = myFile.read();
-            };
-            delay(2000);
-            
+          
         }
+            switch (count) {
+                case 1:
+                    Serial.println(description);
+                    t =DateTime(description.toInt());
+                  
+                    data[numberofData].timeStamp =t;
+                    break;
+                case 2:
+                    Serial.println(description);
+                    data[numberofData].temperature =description.toInt();
+                    break;
+                case 3:
+                    Serial.println(description);
+                    data[numberofData].lightIntensity =description.toInt();
+                    break;
+                case 4:
+                    Serial.println(description);
+                    data[numberofData].CO2 =description.toInt();
+                    break;
+                case 5:
+                    Serial.println(description);
+                    data[numberofData].humidity =description.toInt();
+                    break;
+                case 6:
+                    Serial.println(description);
+                    data[numberofData].nodeAddrLow =description.toInt();
+                    break;
+                case 7:
+                    Serial.println(description);
+                    data[numberofData].nodeAddrHigh =description.toInt();
+                    numberofData++;
+                    
+                    count= 0;
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+            count++;
+            //Serial.println(description);
             description = "";
+            //delay(1000);
             
        }
         
     }
-
     Serial.write("DONE READING!");
     root.close();
     myFile.close();
 
 }
 
+
+void SDManager::removeFile(char *file){
+    
+    if(SD.exists(file)){
+        SD.remove(file);
+    }
+    
+}
+
+int SDManager::getDataSize(){
+    return numberofData;
+}
+
+
+
+
+xbee_data *SDManager::getData(){
+    return data;
+}
 
 
 
