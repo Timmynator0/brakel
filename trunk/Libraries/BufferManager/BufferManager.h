@@ -11,7 +11,7 @@ class BufferManager
 	BufferManager();
 	boolean read(xbee_data *data, char process);
 	boolean store(xbee_data data);
-	boolean isEmpty();
+	boolean isEmpty(char process);
 	void showBuffer();
 };
 
