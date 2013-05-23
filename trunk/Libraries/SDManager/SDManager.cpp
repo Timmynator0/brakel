@@ -22,7 +22,7 @@ void SDManager::initSD(){
 
 }
 
-void SDManager::writeToSD(struct xbee_data *xbee ){
+void SDManager::writeToSD(struct xbee_data *xbee, bool writeOffline ){
     
     char *result = "                              ";
     sprintf(result,"%02d%02d%02d.txt",xbee->timeStamp.day(),xbee->timeStamp.month(),xbee->timeStamp.year());
@@ -75,10 +75,17 @@ void SDManager::writeToSD(struct xbee_data *xbee ){
     }else{
         Serial.println("Error opening SD");
     }
+    delay(1000);
+    if (writeOffline) {
+        Serial.println("yes make offline file");
+        writeToOffline(xbee);
+    }else{
+        Serial.println("no dont make offline file");
+    }
     
 }
 
-void SDManager::readFromSD(struct xbee_data *xbee, char *file){
+void SDManager::readFromSD(char *file){
     
     char character;
     char results[100];
@@ -103,76 +110,125 @@ void SDManager::readFromSD(struct xbee_data *xbee, char *file){
         } else if(isalnum(character)){
                description.concat(character);
         } else if(character ==';'){
-//            do {
-//                character = myFile.read();
-//            } while(character == ' ');
             
         if (description == "UnixTime") {
             value = "";
             while(character != '\n') {
                 if(isdigit(character)) {
                     value.concat(character);
-                } else if(character != '\n') {
-                    // Use of invalid values
-//                    valid = false;
-//                    xbee->temperature = value.toInt();
-                   
-                }
+                } 
                 character = myFile.read();
             };
           
         }
-            switch (count) {
-                case 1:
-                    Serial.println(description);
-                    t =DateTime(description.toInt());
+            // check for array
+            if (numberofData < 100) {
+                
+            
+                switch (count) {
+                    case 1:
+                        Serial.println(description);
+                        t =DateTime(description.toInt());
                   
-                    data[numberofData].timeStamp =t;
-                    break;
-                case 2:
-                    Serial.println(description);
-                    data[numberofData].temperature =description.toInt();
-                    break;
-                case 3:
-                    Serial.println(description);
-                    data[numberofData].lightIntensity =description.toInt();
-                    break;
-                case 4:
-                    Serial.println(description);
-                    data[numberofData].CO2 =description.toInt();
-                    break;
-                case 5:
-                    Serial.println(description);
-                    data[numberofData].humidity =description.toInt();
-                    break;
-                case 6:
-                    Serial.println(description);
-                    data[numberofData].nodeAddrLow =description.toInt();
-                    break;
-                case 7:
-                    Serial.println(description);
-                    data[numberofData].nodeAddrHigh =description.toInt();
-                    numberofData++;
+                        data[numberofData].timeStamp =t;
+                        break;
+                    case 2:
+                        Serial.println(description);
+                        data[numberofData].temperature =description.toInt();
+                        break;
+                    case 3:
+                        Serial.println(description);
+                        data[numberofData].lightIntensity =description.toInt();
+                        break;
+                    case 4:
+                        Serial.println(description);
+                        data[numberofData].CO2 =description.toInt();
+                        break;
+                    case 5:
+                        Serial.println(description);
+                        data[numberofData].humidity =description.toInt();
+                        break;
+                    case 6:
+                        Serial.println(description);
+                        data[numberofData].nodeAddrLow =description.toInt();
+                        break;
+                    case 7:
+                        Serial.println(description);
+                        data[numberofData].nodeAddrHigh =description.toInt();
+                        numberofData++;
                     
-                    count= 0;
-                    break;
+                        count= 0;
+                        break;
                     
-                default:
-                    break;
+                    default:
+                        break;
+                }
             }
             
             count++;
-            //Serial.println(description);
             description = "";
-            //delay(1000);
-            
        }
         
     }
     Serial.write("DONE READING!");
     root.close();
     myFile.close();
+    
+    if(file[0] == 'o')
+        removeFile(file);
+    else
+        Serial.println("File Can not be deleted");
 
+}
+
+void SDManager::writeToOffline(struct xbee_data *xbee){
+    if(SD.exists("offline.txt"))
+        offlinePath = true;
+    else
+        offlinePath = false;
+    
+    offlineFile = SD.open("offline.txt", FILE_WRITE);
+    delay(1000);
+
+    if(offlineFile){
+        Serial.println("Succes opening offline SD");
+        if(!offlinePath){
+            offlineFile.print("UnixTime;");
+            offlineFile.print("Temperatuur;");
+            offlineFile.print("Licht;");
+            offlineFile.print("Co2;");
+            offlineFile.print("Humidity;");
+            offlineFile.print("NodeAddresLow;");
+            offlineFile.println("NodeAddresHigh;");
+        }
+
+        offlineFile.print(xbee->timeStamp.unixtime());
+        
+        offlineFile.print(";");
+        offlineFile.print(xbee->temperature);
+        
+        offlineFile.print(";");
+        offlineFile.print(xbee->lightIntensity);
+        
+        offlineFile.print(";");
+        offlineFile.print(xbee->CO2);
+        
+        offlineFile.print(";");
+        offlineFile.print(xbee->humidity);
+        
+        offlineFile.print(";");
+        offlineFile.print(xbee->nodeAddrLow);
+        
+        offlineFile.print(";");
+        offlineFile.print(xbee->nodeAddrHigh);
+        offlineFile.println(";");
+
+        
+    }else
+        Serial.println("Error opening offline SD");
+    
+    root.close();
+    offlineFile.close();
 }
 
 
@@ -195,6 +251,10 @@ xbee_data *SDManager::getData(){
     return data;
 }
 
+
+xbee_data *SDManager::getOFflineData(){
+    return offlineData;
+}
 
 
 

@@ -12,11 +12,16 @@ class SDManager{
     
 public:
     void initSD(void);
-    void writeToSD(struct xbee_data *xbee);
-    void readFromSD(struct xbee_data *xbee, char *file);
+    void writeToSD(struct xbee_data *xbee, bool writeOffline);
+    void readFromSD(char *file);
     void removeFile(char *file);
+    void writeToOffline(struct xbee_data *xbee);
+    
     xbee_data data[100];
+    xbee_data offlineData[100];
     xbee_data *getData();
+    xbee_data *getOFflineData();
+    
     int getDataSize();
     int count;
 
@@ -25,9 +30,10 @@ private:
     int nodeCount;
     int nodeValue;
     int numberofData;
-    File myFile;
+    File myFile,offlineFile;
     SdFile root;
     bool filePathCheck;
+    bool offlinePath;
     DateTime t;
     
 };
