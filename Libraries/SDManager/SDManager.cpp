@@ -3,6 +3,7 @@
 #include <SD.h>
 #include <String.h>
 
+#define SDCARD  0
 
 void SDManager::initSD(){
  
@@ -22,7 +23,19 @@ void SDManager::initSD(){
 
 }
 
-void SDManager::writeToSD(struct xbee_data *xbee, bool writeOffline ){
+
+void SDManager::readFromBuffer(){
+    while(!buff.isEmpty(0)){
+        bool result = buff.read(&buffData, 0);
+        if(result)
+            writeToSD(&buffData ,false);
+        else
+            Serial.println("Failed to read from buffer");
+    }
+
+}
+
+void SDManager::writeToSD(xbee_data *xbee, bool writeOffline ){
     
     char *result = "                              ";
     sprintf(result,"%02d%02d%02d.txt",xbee->timeStamp.day(),xbee->timeStamp.month(),xbee->timeStamp.year());
@@ -181,7 +194,7 @@ void SDManager::readFromSD(char *file){
 
 }
 
-void SDManager::writeToOffline(struct xbee_data *xbee){
+void SDManager::writeToOffline(xbee_data *xbee){
     if(SD.exists("offline.txt"))
         offlinePath = true;
     else
