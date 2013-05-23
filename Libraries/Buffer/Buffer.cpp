@@ -8,6 +8,9 @@ xbee_data *pRdBuffer = InternalBuffer;
 xbee_data *pRdBuffer2 = InternalBuffer;
 xbee_data *pWrBuffer = InternalBuffer;
 	
+#define SDCARD  0
+#define DATABASE 1
+
 Buffer::Buffer()
 {
 	
@@ -75,9 +78,14 @@ boolean Buffer::read1(xbee_data *data)
   return retval; 
 }
 
-boolean Buffer::isEmpty()
+boolean Buffer::isEmpty(char process)
 {
-	return pRdBuffer == pWrBuffer && pRdBuffer2 == pWrBuffer;
+	if(process == SDCARD)
+		return pRdBuffer == pWrBuffer;
+	else if(process == DATABASE)
+		return pRdBuffer2 == pWrBuffer;
+	else
+	return false;
 }
 
 //

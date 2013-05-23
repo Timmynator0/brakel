@@ -8,7 +8,7 @@ class Buffer
 {
 	public:
 	Buffer();
-	boolean isEmpty();
+	boolean isEmpty(char process);
 	boolean store(xbee_data data);
 	boolean read0(xbee_data *data);
 	boolean read1(xbee_data *data);

@@ -53,9 +53,9 @@ boolean BufferManager::read(xbee_data *data, char process)
   }
 }
 
-boolean isEmpty()
+boolean isEmpty(char process)
 {
-	return buffer.isEmpty();
+	return buffer.isEmpty(char process);
 }
 
 //
