@@ -9,11 +9,8 @@ namespace BrakelWeb.Models.Mapping
         {
             // Primary Key
             this.HasKey(t => t.Id);
-
+             this.Property(t => t.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             // Properties
-            this.Property(t => t.Id)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-
             this.Property(t => t.NodeAdress)
                 .HasMaxLength(50);
 
@@ -26,12 +23,6 @@ namespace BrakelWeb.Models.Mapping
             this.Property(t => t.Humidity).HasColumnName("Humidity");
             this.Property(t => t.Light).HasColumnName("Light");
             this.Property(t => t.NodeAdress).HasColumnName("NodeAdress");
-
-            // Relationships
-            this.HasOptional(t => t.Node)
-                .WithMany(t => t.DataPoints)
-                .HasForeignKey(d => d.NodeAdress);
-
         }
     }
 }

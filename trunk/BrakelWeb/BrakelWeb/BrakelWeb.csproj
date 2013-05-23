@@ -313,6 +313,7 @@
     <Compile Include="Models\Mapping\DataPointMap.cs" />
     <Compile Include="Models\Mapping\NodeMap.cs" />
     <Compile Include="Models\Node.cs" />
+    <Compile Include="Models\XbeeData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Receive\DataReceiver.aspx.cs">
       <DependentUpon>DataReceiver.aspx</DependentUpon>
