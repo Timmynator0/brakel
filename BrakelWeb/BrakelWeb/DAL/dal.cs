@@ -7,7 +7,7 @@ using BrakelWeb.Models;
 
 namespace BrakelWeb.DAL
 {
-   public class DAL
+   public class StorageProvider
    {
         Boolean storeNode(Node node)
         {
@@ -22,6 +22,7 @@ namespace BrakelWeb.DAL
             }
            
         }
+
 
         Boolean removeNode(Node node)
         {
@@ -62,6 +63,31 @@ namespace BrakelWeb.DAL
 
             }
         }
+
+        public Boolean storeDataList(List<DataPoint> datalist)
+        {
+            using (var db = new BrakelContext())
+            {
+                foreach (DataPoint data in datalist)
+                {
+                    db.DataPoints.Add(data);
+
+                }
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.Debug.WriteLine(e.ToString());
+                    return false;
+                }
+                return true;
+
+            }
+        }
+
+
 
         DataPoint getDataPoint(int id)
         {
