@@ -1,0 +1,25 @@
+POST http://localhost/Receive/WebService.asmx HTTP/1.1 <!-- change this to server adress! -->
+Accept-Encoding: gzip,deflate
+Content-Type: text/xml;charset=UTF-8
+SOAPAction: "localhost/Receive/storedata"  <!-- same here!-->
+Content-Length: 18491
+Host: localhost
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.1.1 (java 1.5)
+
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <storedata xmlns="localhost/Receive/">
+         <XbeeDataPoints>
+            <XbeeData> <!-- repeat these XbeeData pieces per DataPoint this example states the format data should be ( SO NO ADDING STRINGS IN AN INT FIELD!) --> 
+               <Time>int</Time>
+               <Temperature>int</Temperature>
+               <CO2>int</CO2>
+               <Humidity>int</Humidity>
+               <Light>int</Light>
+               <NodeAdressLow>string</NodeAdressLow>
+               <NodeAdressHigh>string</NodeAdressHigh>
+            </XbeeData>
+      </storedata>
+   </soap:Body>
+</soap:Envelope>
