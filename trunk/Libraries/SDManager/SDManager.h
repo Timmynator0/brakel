@@ -7,20 +7,28 @@
 #include <string.h>
 #include <Types.h>
 #include <SdFat.h>
+#include <Buffer.h>
+#include <BufferManager.h>
 
 class SDManager{
     
 public:
     void initSD(void);
-    void writeToSD(struct xbee_data *xbee, bool writeOffline);
+
     void readFromSD(char *file);
+    void readFromBuffer();
+    
     void removeFile(char *file);
-    void writeToOffline(struct xbee_data *xbee);
+    void writeToSD(xbee_data *xbee, bool writeOffline);
+    void writeToOffline(xbee_data *xbee);
     
     xbee_data data[100];
     xbee_data offlineData[100];
     xbee_data *getData();
     xbee_data *getOFflineData();
+    
+    xbee_data buffData;
+    BufferManager buff;
     
     int getDataSize();
     int count;
