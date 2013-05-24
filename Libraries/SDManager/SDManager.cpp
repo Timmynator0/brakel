@@ -271,8 +271,8 @@ xbee_data *SDManager::getOFflineData(){
     return offlineData;
 }
 
-void SDManager::setBufferManager(BufferManager b){
-    buff = &b;
+void SDManager::setBufferManager(BufferManager *b){
+    buff = b;
 
 }
 
