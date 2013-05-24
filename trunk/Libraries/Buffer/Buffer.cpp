@@ -93,7 +93,7 @@ boolean Buffer::isEmpty(char process)
 //
 void Buffer::showBuffer()
 {
-  Serial.println("--------------------------------------------");
+  //Serial.println("--------------------------------------------");
   Serial.print("Buffer:\t\t");
   for(int idx = 0; idx < bufferSize; idx++ )
   {
