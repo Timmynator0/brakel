@@ -24,9 +24,14 @@ void SDManager::initSD(){
 }
 
 
+void SDManager::storeToBuffer(xbee_data data){
+    buff->store(data);
+    
+}
+
 void SDManager::readFromBuffer(){
-    while(!buff.isEmpty(0)){
-        bool result = buff.read(&buffData, 0);
+    while(!buff->isEmpty(SDCARD)){
+        bool result = buff->read(&buffData, SDCARD);
         if(result)
             writeToSD(&buffData ,false);
         else
@@ -257,9 +262,6 @@ int SDManager::getDataSize(){
     return numberofData;
 }
 
-
-
-
 xbee_data *SDManager::getData(){
     return data;
 }
@@ -267,6 +269,11 @@ xbee_data *SDManager::getData(){
 
 xbee_data *SDManager::getOFflineData(){
     return offlineData;
+}
+
+void SDManager::setBufferManager(BufferManager b){
+    buff = &b;
+
 }
 
 
