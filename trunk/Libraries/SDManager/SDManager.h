@@ -22,13 +22,16 @@ public:
     void writeToSD(xbee_data *xbee, bool writeOffline);
     void writeToOffline(xbee_data *xbee);
     
+    void setBufferManager(BufferManager b);
+    void storeToBuffer(xbee_data data);
+    
     xbee_data data[100];
     xbee_data offlineData[100];
     xbee_data *getData();
     xbee_data *getOFflineData();
     
     xbee_data buffData;
-    BufferManager buff;
+    BufferManager *buff;
     
     int getDataSize();
     int count;
