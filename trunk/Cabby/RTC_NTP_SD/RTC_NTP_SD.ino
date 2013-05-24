@@ -5,11 +5,12 @@
 #include <EthernetUdp.h>
 #include <Wire.h>
 #include <SDManager.h>
+#include <Buffer.h>
+#include <BufferManager.h>
 
-NTP ntp;
+//NTP ntp;
 
 SDManager manager;
-
 
 xbee_data data;
 
@@ -18,16 +19,18 @@ void setup(){
    manager.initSD();
   
   delay(1000);
-  
-  ntp.setup();
+ 
+//  ntp.setup();
   
 }
 
 void loop(){
   
    Serial.println("Started");
-   ntp.init();
-   data.timeStamp = ntp.GetDateTime();
+
+//   ntp.init();
+//   data.timeStamp = ntp.GetDateTime();
+   
    data.temperature = 1;
    data.lightIntensity = 2;
    data.CO2 = 3;
@@ -46,6 +49,16 @@ void loop(){
 //  
   manager.readFromSD("offline.txt");
   Serial.println("Done Reading......");
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 //
 //  Serial.println("Data is : ");
 //  xbee_data* d;
@@ -58,4 +71,10 @@ void loop(){
     delay(60L * 1000L);
 
 }
+
+
+//void setBufferManager(BufferManager *b){
+//    buff = &b;
+//    
+//}
 
