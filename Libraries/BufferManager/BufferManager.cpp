@@ -21,9 +21,13 @@ boolean BufferManager::store(xbee_data data)
   {
     ;
   }
+  noInterrupts();
   wrLock = true;
+  interrupts();
   boolean temp = buffer.store(data);
+  noInterrupts();
   wrLock = false;
+  interrupts();
   return temp;
 }
 
@@ -35,9 +39,13 @@ boolean BufferManager::read(xbee_data *data, char process)
     {
       ;
     }
+	noInterrupts();
     rdLock = true;
+	interrupts();
     boolean temp = buffer.read0(data);
+	noInterrupts();
     rdLock = false;
+	interrupts();
     return temp;
   }
   else if(process == DATABASE)
@@ -46,9 +54,13 @@ boolean BufferManager::read(xbee_data *data, char process)
     {
       ;
     }
+	noInterrupts();
     rdLock = true;
+	interrupts();
     boolean temp = buffer.read1(data);
+	noInterrupts();
     rdLock = false;
+	interrupts();
     return temp;
   }
 }
