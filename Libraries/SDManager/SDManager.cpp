@@ -21,13 +21,14 @@ void SDManager::storeToBuffer(xbee_data data){
     
 }
 
-void SDManager::readFromBuffer(){
+bool SDManager::readFromBuffer(){
     while(!buff->isEmpty(SDCARD)){
         bool result = buff->read(&buffData, SDCARD);
-        if(result)
+        if(result){
             writeToSD(&buffData ,false);
-        else
-            Serial.println("Failed to read from buffer");
+            return true;
+        }else
+            return false;
     }
 
 }
@@ -36,7 +37,6 @@ void SDManager::writeToSD(xbee_data *xbee, bool writeOffline ){
     
     char fileName[20];
     sprintf(fileName,"%02d%02d%02d.txt",xbee->timeStamp.day(),xbee->timeStamp.month(),xbee->timeStamp.year());
-    Serial.println(fileName);
     
     if(SD.exists(fileName))
         filePathCheck = true;
@@ -163,8 +163,6 @@ void SDManager::writeToOffline(xbee_data *xbee){
         offlinePath = false;
     
     offlineFile = SD.open("offline.txt", FILE_WRITE);
-    delay(1000);
-
     if(offlineFile){
         Serial.println("Succes opening offline SD");
         dataToFile(offlineFile,xbee,offlinePath);
