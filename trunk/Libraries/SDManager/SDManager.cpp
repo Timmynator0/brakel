@@ -11,9 +11,7 @@
 bool SDManager::initSD(){
     
     pinMode(megaPin, OUTPUT);
-    nodeCount = 0;
     delay(100);
-    
     return SD.begin(sdPin);
 }
 
@@ -57,10 +55,8 @@ void SDManager::writeToSD(xbee_data *xbee, bool writeOffline ){
             if(myFile)
                 dataToFile(myFile, xbee, filePathCheck);
         }
-        
-       
     }
-    delay(1000);
+  
     if (writeOffline) 
         writeToOffline(xbee);
     
@@ -77,7 +73,6 @@ void SDManager::readFromSD(char *file){
     boolean valid = true;
     
     myFile = SD.open(file);
-    delay(1000);
     if(myFile){
         Serial.println("Reading from file succes");
     }else{
