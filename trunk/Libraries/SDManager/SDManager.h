@@ -16,7 +16,7 @@ public:
     bool initSD();
 
     void readFromSD(char *file);
-    void readFromBuffer();
+    bool readFromBuffer();
     
     void removeFile(char *file);
     void writeToSD(xbee_data *xbee, bool writeOffline);
