@@ -13,7 +13,7 @@
 class SDManager{
     
 public:
-    void initSD(void);
+    bool initSD();
 
     void readFromSD(char *file);
     void readFromBuffer();
@@ -24,6 +24,8 @@ public:
     
     void setBufferManager(BufferManager *b);
     void storeToBuffer(xbee_data data);
+    
+    void dataToFile(File file, xbee_data *xbee,bool filePath);
     
     xbee_data data[100];
     xbee_data offlineData[100];
@@ -42,11 +44,10 @@ private:
     int nodeValue;
     int numberofData;
     File myFile,offlineFile;
-    SdFile root;
+    
     bool filePathCheck;
     bool offlinePath;
     DateTime t;
-    
 };
 
 
