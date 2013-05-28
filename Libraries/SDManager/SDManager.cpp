@@ -4,23 +4,17 @@
 #include <String.h>
 
 #define SDCARD  0
+#define semicolon   ";"
+#define megaPin 53
+#define sdPin   4
 
-void SDManager::initSD(){
- 
+bool SDManager::initSD(){
     
-    Serial.println("Waiting 5 seconds for SD ");
-    Serial.print("Initializing SD card...");
-    
-    pinMode(53, OUTPUT);
+    pinMode(megaPin, OUTPUT);
     nodeCount = 0;
-    delay(5000);
+    delay(100);
     
-    if(!SD.begin(4)){
-        Serial.println("initialization failed!");
-    }else{
-         Serial.println("initialization done.");
-    }
-
+    return SD.begin(sdPin);
 }
 
 
@@ -42,64 +36,34 @@ void SDManager::readFromBuffer(){
 
 void SDManager::writeToSD(xbee_data *xbee, bool writeOffline ){
     
-    char *result = "                              ";
-    sprintf(result,"%02d%02d%02d.txt",xbee->timeStamp.day(),xbee->timeStamp.month(),xbee->timeStamp.year());
-    Serial.println(result);
+    char fileName[20];
+    sprintf(fileName,"%02d%02d%02d.txt",xbee->timeStamp.day(),xbee->timeStamp.month(),xbee->timeStamp.year());
+    Serial.println(fileName);
     
-    if(SD.exists(result))
+    if(SD.exists(fileName))
         filePathCheck = true;
     else
         filePathCheck = false;
     
-    
-    myFile = SD.open(result, FILE_WRITE);
-    delay(1000);
+    myFile = SD.open(fileName, FILE_WRITE);
 
     if(myFile){
         Serial.println("Succes opening SD");
-        if(!filePathCheck){
-            myFile.print("UnixTime;");
-            myFile.print("Temperatuur;");
-            myFile.print("Licht;");
-            myFile.print("Co2;");
-            myFile.print("Humidity;");
-            myFile.print("NodeAddresLow;");
-            myFile.println("NodeAddresHigh;");
-        }
- 
-        myFile.print(xbee->timeStamp.unixtime());
-        
-        myFile.print(";");
-        myFile.print(xbee->temperature);
-
-        myFile.print(";");
-        myFile.print(xbee->lightIntensity);
-        
-        myFile.print(";");
-        myFile.print(xbee->CO2);
-        
-        myFile.print(";");
-        myFile.print(xbee->humidity);
-        
-        myFile.print(";");
-        myFile.print(xbee->nodeAddrLow);
-        
-        myFile.print(";");
-        myFile.print(xbee->nodeAddrHigh);
-        myFile.println(";");
-        root.close();
-        myFile.close();
+        dataToFile(myFile, xbee, filePathCheck);
         
     }else{
-        Serial.println("Error opening SD");
+        if(initSD()){
+            myFile = SD.open(fileName, FILE_WRITE);
+            if(myFile)
+                dataToFile(myFile, xbee, filePathCheck);
+        }
+        
+       
     }
     delay(1000);
-    if (writeOffline) {
-        Serial.println("yes make offline file");
+    if (writeOffline) 
         writeToOffline(xbee);
-    }else{
-        Serial.println("no dont make offline file");
-    }
+    
     
 }
 
@@ -188,8 +152,6 @@ void SDManager::readFromSD(char *file){
        }
         
     }
-    Serial.write("DONE READING!");
-    root.close();
     myFile.close();
     
     if(file[0] == 'o')
@@ -210,42 +172,10 @@ void SDManager::writeToOffline(xbee_data *xbee){
 
     if(offlineFile){
         Serial.println("Succes opening offline SD");
-        if(!offlinePath){
-            offlineFile.print("UnixTime;");
-            offlineFile.print("Temperatuur;");
-            offlineFile.print("Licht;");
-            offlineFile.print("Co2;");
-            offlineFile.print("Humidity;");
-            offlineFile.print("NodeAddresLow;");
-            offlineFile.println("NodeAddresHigh;");
-        }
-
-        offlineFile.print(xbee->timeStamp.unixtime());
-        
-        offlineFile.print(";");
-        offlineFile.print(xbee->temperature);
-        
-        offlineFile.print(";");
-        offlineFile.print(xbee->lightIntensity);
-        
-        offlineFile.print(";");
-        offlineFile.print(xbee->CO2);
-        
-        offlineFile.print(";");
-        offlineFile.print(xbee->humidity);
-        
-        offlineFile.print(";");
-        offlineFile.print(xbee->nodeAddrLow);
-        
-        offlineFile.print(";");
-        offlineFile.print(xbee->nodeAddrHigh);
-        offlineFile.println(";");
-
-        
+        dataToFile(offlineFile,xbee,offlinePath);
     }else
         Serial.println("Error opening offline SD");
     
-    root.close();
     offlineFile.close();
 }
 
@@ -256,6 +186,40 @@ void SDManager::removeFile(char *file){
         SD.remove(file);
     }
     
+}
+
+void SDManager::dataToFile(File file, xbee_data *xbee, bool filePath){
+    if(!filePath){
+        file.print("UnixTime;");
+        file.print("Temperatuur;");
+        file.print("Licht;");
+        file.print("Co2;");
+        file.print("Humidity;");
+        file.print("NodeAddresLow;");
+        file.println("NodeAddresHigh;");
+    }
+    
+    file.print(xbee->timeStamp.unixtime());
+    
+    file.print(semicolon);
+    file.print(xbee->temperature);
+    
+    file.print(semicolon);
+    file.print(xbee->lightIntensity);
+    
+    file.print(semicolon);
+    file.print(xbee->CO2);
+    
+    file.print(semicolon);
+    file.print(xbee->humidity);
+    
+    file.print(semicolon);
+    file.print(xbee->nodeAddrLow);
+    
+    file.print(semicolon);
+    file.print(xbee->nodeAddrHigh);
+    file.println(semicolon);
+    file.close();
 }
 
 int SDManager::getDataSize(){
