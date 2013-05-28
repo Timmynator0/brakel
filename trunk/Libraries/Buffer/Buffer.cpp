@@ -2,14 +2,10 @@
 #include "Buffer.h"
 #include <Types.h>
 
-#define bufferSize 25
 xbee_data InternalBuffer[bufferSize] = {0,};
 xbee_data *pRdBuffer = InternalBuffer;
 xbee_data *pRdBuffer2 = InternalBuffer;
 xbee_data *pWrBuffer = InternalBuffer;
-	
-#define SDCARD  0
-#define DATABASE 1
 
 Buffer::Buffer()
 {
