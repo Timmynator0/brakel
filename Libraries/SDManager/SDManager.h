@@ -6,7 +6,6 @@
 #include <SD.h>
 #include <string.h>
 #include <Types.h>
-#include <SdFat.h>
 #include <Buffer.h>
 #include <BufferManager.h>
 
@@ -27,6 +26,8 @@ public:
     
     void dataToFile(File file, xbee_data *xbee,bool filePath);
     
+    
+    NTP ntp;
     xbee_data data[100];
     xbee_data offlineData[100];
     xbee_data *getData();

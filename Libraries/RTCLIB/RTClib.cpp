@@ -25,7 +25,7 @@ RTC_DS1307 RTC2;
 byte timeServer2[]={193, 79, 237, 14};
 byte mac2[] = { 0x90, 0xA2, 0xDA, 0x00, 0x8D, 0x40 };
 
-EthernetUDP Udp2;
+
 const int NTP_PACKET_SIZE2= 48;
 byte pb2[NTP_PACKET_SIZE2];
 unsigned int localPort2 = 8888;
@@ -273,41 +273,63 @@ DateTime RTC_Millis::now() {
 /////////////////////////////////////////
                 ///NTP///
 /////////////////////////////////////////
-void NTP::init(){
-  
-    if(getYear()== 2000 || getYear() < 2013)
-        sendRequest();
-    
-    if(getHour() == 14 && getMinute() == 56 && getSecond() == 0)
-        sendRequest();
-  
-}
 
 
-void NTP::setup(){
+
+bool NTP::setup(){
     
     int DHCP2 = 0;
     DHCP2 = Ethernet.begin(mac2);
-    if(DHCP2)
-        Serial.println("DHCP Success");
-    else
-        Serial.println("DHCP Failed");
-
+    
     Udp2.begin(localPort2);
     Wire.begin();
     RTC2.begin();
-    
     nodeCount = 0;
+    if(DHCP2)
+        return true;
+    else
+        return false;
 
 }
 
-void NTP::sendRequest(){
+bool NTP::udpAvalability(){
+    
+    sendNTPpacket2(timeServer2);
+    
+    bool isAvailable = false;
+    int waitTime = 0;
+    while(!isAvailable && waitTime < 100)
+    {
+        if(Udp2.available())
+        {isAvailable = true;}
+        waitTime++;
+        delay(1);
+    }
+    
+    return isAvailable;
+
+}
+
+bool NTP::sendRequest(){
     
    
     sendNTPpacket2(timeServer2);
-    delay(100);
+    
+    bool isAvailable = false;
+    int waitTime = 0;
+    while(!isAvailable && waitTime < 100)
+    {
+        if(Udp2.available())
+        {isAvailable = true;}
+        waitTime++;
+        Serial.println(waitTime);
+        delay(1);
+    }
+    if (!isAvailable)
+    {
+        return false;
+    }else{
     if(Udp2.parsePacket()){
-        Serial.println("UDP available2");
         Udp2.read(pb2, NTP_PACKET_SIZE2);
         unsigned long t1, t2, t3, t4;
         t1 = t2 = t3 = t4 = 0;
@@ -338,27 +360,18 @@ void NTP::sendRequest(){
         t2 -= seventyYears2;
         t3 -= seventyYears2;
         t4 -= seventyYears2;
-
-        
-        PrintDateTime(DateTime(t4));
-        Serial.println(f4,4);
-        Serial.println();
         
         // Time zone instellen
         t4 += (2 * 3600L);     
         t4 += 1;               // adjust the delay(1000) at 
         RTC2.adjust(DateTime(t4));
+    
         
-        Serial.print("RTC after : ");
-        PrintDateTime(RTC2.now());
-        Serial.println();
-        
-        Serial.println("Updated...");
-
-        
-    }else{
-        Serial.println("UDP not available2");
     }
+    }
+    
+    
+    return true;
     
 }
 

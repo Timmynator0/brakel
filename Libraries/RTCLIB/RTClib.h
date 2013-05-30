@@ -25,7 +25,7 @@ public:
     uint8_t minute() const      { return mm; }
     uint8_t second() const      { return ss; }
     uint8_t dayOfWeek() const;
-    
+//    String unixtime;
     
 
     // 32-bit times as seconds since 1/1/2000
@@ -65,15 +65,16 @@ protected:
 class NTP{
 
 public:
-    void init();
-    void sendRequest();
+    bool sendRequest();
     DateTime time;
     void PrintDateTime(DateTime t);
     void PrintDateTime();
     unsigned long sendNTPpacket2(byte *address);
-    void setup();
+    bool setup();
+    bool udpAvalability();
     char* getDateSD();
 	DateTime GetDateTime();
+    EthernetUDP Udp2;
     
 private:
     
