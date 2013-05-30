@@ -26,17 +26,25 @@ bool SDManager::readFromBuffer(){
         bool result = buff->read(&buffData, SDCARD);
         if(result){
             writeToSD(&buffData ,false);
-            return true;
+            
         }else
             return false;
     }
-
+    return true;
 }
 
 void SDManager::writeToSD(xbee_data *xbee, bool writeOffline ){
     
+    
     char fileName[20];
+    if(ntp.udpAvalability()){
+    
     sprintf(fileName,"%02d%02d%02d.txt",xbee->timeStamp.day(),xbee->timeStamp.month(),xbee->timeStamp.year());
+        
+    }else{
+        sprintf(fileName,"temp.txt");
+    }
+
     
     if(SD.exists(fileName))
         filePathCheck = true;
@@ -56,8 +64,10 @@ void SDManager::writeToSD(xbee_data *xbee, bool writeOffline ){
                 dataToFile(myFile, xbee, filePathCheck);
         }
     }
+        
+    
   
-    if (writeOffline) 
+    if (writeOffline)
         writeToOffline(xbee);
     
     
