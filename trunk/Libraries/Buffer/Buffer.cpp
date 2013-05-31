@@ -93,7 +93,7 @@ void Buffer::showBuffer()
   Serial.print("Buffer:\t\t");
   for(int idx = 0; idx < bufferSize; idx++ )
   {
-    Serial.print((char)InternalBuffer[idx].temperature); Serial.print(" ");
+    Serial.print(InternalBuffer[idx].lightIntensity,DEC); Serial.print(" ");
   }
   Serial.println();
   Serial.print("pWrBuffer:\t");

@@ -9,7 +9,7 @@
 #define SCREEN_DEBUG 3
 #define MAX_INT 32767
 
-struct message{
+struct LCDMessage{
   char* value;
   String ID;
   int type;
@@ -18,10 +18,10 @@ struct message{
 
 void LCDSetup();
 void LCDUpdate();
-bool LCDAddError(message newError);
+bool LCDAddError(LCDMessage newError);
 bool LCDRemoveError(String oldError);
-bool LCDAddMessage(message newMessage);
-bool LCDRemoveMessage(String oldMessage);
+bool LCDAddMessage(LCDMessage newLCDMessage);
+bool LCDRemoveLCDMessage(String oldLCDMessage);
 bool LCDAddBrokenNode(char* newNode);
 bool LCDRemoveBrokenNode(String oldNode);
 void LCDBeep();
