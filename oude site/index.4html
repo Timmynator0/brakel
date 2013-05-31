@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>	
+	<meta charset="utf-8" />
+	<title>Brakel Atmos</title>
+	<meta name="author" content="Christiaan Rakowski">
+	<meta name="viewport" content="width=device-width, maximum-scale=1.0, initial-scale=1.0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" /> 
+	<link rel="apple-touch-icon" href="icon.png"/>	
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+	<link rel="icon" type="image/x-icon" href="favicon.ico" />
+	<!--link rel="apple-touch-startup-image" sizes="1024x748" href="images/ipad_landscape.png" />
+	<link rel="apple-touch-startup-image" sizes="768x1004" href="images/ipad_portrait.png" />
+	<link rel="apple-touch-startup-image" href="images/iphone_portrait.png" />
+	<link rel="apple-touch-startup-image" sizes="640x960" href="images/iphone_portrait_hd.png" /-->	
+	<link rel="stylesheet" type="text/css" href="styles/yui-css-reset.css">
+	<link rel="stylesheet" type="text/css" href="jqplot/jquery.jqplot.min.css" />
+	<link rel="stylesheet" type="text/css" href="jqplot/syntaxhighlighter/styles/shCoreDefault.min.css" />
+	<link rel="stylesheet" type="text/css" href="jqplot/syntaxhighlighter/styles/shThemejqPlot.min.css" />
+	<link rel="stylesheet" type="text/css" href="styles/colorbox.css">
+	<link rel="stylesheet" type="text/css" href="styles/styles.css">
+	<script src="scripts/jquery-latest.min.js"></script>
+	<script async src="scripts/jquery-ui.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<header>
+			<a href="http://www.brakelatmos.com" target="_BLANK"><img src="images/logo.png" alt="Brakel Atmos"></a>
+			<div id="topBar">
+				<div>Daglicht</div>
+				<div>Ventilatie</div>
+				<div>Veiligheid</div>
+				<span>Project, Plaats</span>
+			</div>
+		</header>		
+		<section>		
+			<article>
+				<form id="loginForm" action="login.php" method="post">
+					<div>
+						<input type="password" name="passwordBeheerder" /><span>Beheerder</span>
+					</div>
+					<div>
+						<input type="password" name="passwordGebruiker" /><span>Gebouwgebruiker/gast</span>
+					</div>
+					<div>
+						<input type="password" name="passwordOnderhoud" /><span>Onderhoudsmedewerker</span>
+					</div>
+					<div>
+						<input type="submit" value="Inloggen" />
+					</div>
+				</form>
+			</article>
+		</section>
+		<footer>
+			<h1>Made by Christiaan Rakowski &copy;</h1>
+			<a href="https://pachube.com/feeds/47260" target="_blank">Feed on Pachube.com</a>
+		</footer>
+	</div>
+	<div style="display:none;">
+		<script src="jqplot/jquery.jqplot.min.js"></script>
+		<script src="jqplot/syntaxhighlighter/scripts/shCore.min.js"></script>
+		<script src="jqplot/syntaxhighlighter/scripts/shBrushJScript.min.js"></script>
+		<script src="jqplot/syntaxhighlighter/scripts/shBrushXml.min.js"></script>
+		<!-- Additional plugins go here -->
+		<script async src="jqplot/plugins/jqplot.dateAxisRenderer.min.js"></script>
+		<script async src="jqplot/plugins/jqplot.canvasTextRenderer.min.js"></script>
+		<script async src="jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
+		<script async src="jqplot/plugins/jqplot.highlighter.min.js"></script>
+		<script async src="jqplot/plugins/jqplot.cursor.min.js"></script> 
+		<script async src="jqplot/plugins/jqplot.pointLabels.min.js"></script>
+		<!-- End additional plugins -->		
+		<script async src="scripts/jquery.colorbox-min.js"></script>
+		<script async src="scripts/scripts.js"></script>
+	</div>
+</body>
+</html>
