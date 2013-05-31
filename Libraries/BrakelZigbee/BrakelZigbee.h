@@ -25,9 +25,17 @@
 
    8 mei 2013, AJW, Avans HS, Technische Informatica
  */
-#include <Arduino.h>
-//#include <RTClib.h>
+
+#include "Arduino.h"
+#include <RTClib.h>
 #include <Types.h>
+/*
+#include <SPI.h>
+
+#include <Ethernet.h>
+#include <EthernetUdp.h>
+#include <Wire.h>
+#include <SDManager.h>*/
  
 #define STARTDELIMITER       0x7E    // the value of the start byte of a xbee zigbeePacket
 #define ANALOG_CHANNEL_MASK  0x0E    //
@@ -50,6 +58,7 @@ extern byte checksum;                // calculated checksum
 // recieved 10-bit values for the temperature, the humidity and the light intensity
 
 extern xbee_data zigbeeData;
+extern RTC_DS1307 RTC;
 
 extern bool zigbeeParsePacket();
 #endif

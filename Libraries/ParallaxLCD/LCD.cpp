@@ -9,14 +9,14 @@ int numberBrokenNodes = 0;
 int currentBrokenNode = 0;
 
 //errors
-message errors[5];
+LCDMessage errors[5];
 int numberErrors = 0;
 int currentError = 0;
 
-//messages
-message messages[10];
-int numberMessages = 0;
-int currentMessage = 0;
+//LCDMessages
+LCDMessage LCDMessages[10];
+int numberLCDMessages = 0;
+int currentLCDMessage = 0;
 
 bool updated = false;
 bool initialized = false;
@@ -25,7 +25,7 @@ int sinceLastUpdate = MAX_INT;
 void LCDSetup() {
   // initialize LCD screen and turn the light on:
   Serial1.begin(9600);
-  delay(200);
+  delay(200);//delay om te wachten met de rest van de init. Anders komt niet alles aan.
 //  Serial1.print("alksdjf");
   Serial1.write(0x16);
   Serial1.write(0x80);
@@ -38,16 +38,9 @@ void LCDSetup() {
 void LCDUpdate()
 {
   Serial1.write(0x16);
-  Serial.print("Meldingen, init, updated: ");
-  Serial.print(numberErrors+numberBrokenNodes+numberMessages);
-  Serial.print(" ");
-  Serial.print(initialized);
-  Serial.print(" ");
-  Serial.println(updated);
-  if(!initialized || (numberErrors+numberBrokenNodes+numberMessages != 0) || updated || sinceLastUpdate >= 5)
+  if(!initialized || (numberErrors+numberBrokenNodes+numberLCDMessages != 0) || updated || sinceLastUpdate >= 5)
   {
     sinceLastUpdate = 0;
-    Serial.println("Schermupdate");
     updated = false;
     
     if(!initialized)
@@ -90,21 +83,21 @@ void LCDUpdate()
       Serial1.print(" node's kapot.");
       Serial1.write(0xBC);
     }
-    if(numberMessages == 0)
+    if(numberLCDMessages == 0)
     {
       Serial1.print("Geen berichten.");
     }
     else
     {
-      Serial1.print(messages[currentMessage].value);
-      currentMessage++;
-      currentMessage = currentMessage % numberMessages;
+      Serial1.print(LCDMessages[currentLCDMessage].value);
+      currentLCDMessage++;
+      currentLCDMessage = currentLCDMessage % numberLCDMessages;
     }
   }
   sinceLastUpdate++;
 }
 
-bool LCDAddError(message newError)
+bool LCDAddError(LCDMessage newError)
 {
   if(numberErrors < 5)
   {
@@ -143,40 +136,40 @@ bool LCDRemoveError(String oldError)
   return returnBool;
 }
 
-bool LCDAddMessage(message newMessage)
+bool LCDAddMessage(LCDMessage newLCDMessage)
 {
-  if(numberMessages < 10)
+  if(numberLCDMessages < 10)
   {
-    numberMessages++;
-    messages[numberMessages-1] = newMessage;
+    numberLCDMessages++;
+    LCDMessages[numberLCDMessages-1] = newLCDMessage;
     return true;
   }
   else
   {
     for(int i = 0; i<9; i++ )
     {
-      messages[i] = messages[i+1];
+      LCDMessages[i] = LCDMessages[i+1];
     }
-    messages[9] = newMessage;
+    LCDMessages[9] = newLCDMessage;
     return true;
   }
 }
 
-bool LCDRemoveMessage(String oldMessage)
+bool LCDRemoveLCDMessage(String oldLCDMessage)
 {
   bool returnBool = false;
   int teller = 0;
-  for(int i = 0; i < numberMessages; i++ )
+  for(int i = 0; i < numberLCDMessages; i++ )
   {
-    messages[teller] = messages[i];
-    if(!(oldMessage.equalsIgnoreCase(messages[i].value)))
+    LCDMessages[teller] = LCDMessages[i];
+    if(!(oldLCDMessage.equalsIgnoreCase(LCDMessages[i].value)))
     {
       teller++;
     }
     else
     {
       returnBool = true;
-      numberMessages--;
+      numberLCDMessages--;
     }
   } 
   return returnBool;

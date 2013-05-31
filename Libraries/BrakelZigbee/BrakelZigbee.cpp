@@ -22,6 +22,7 @@ byte checksum = 0;                // calculated checksum
 // recieved 10-bit values for the temperature, the humidity and the light intensity
 
 xbee_data zigbeeData;
+RTC_DS1307 RTC;
 
 bool zigbeeParsePacket();
 
@@ -75,10 +76,22 @@ bool zigbeeParsePacket() {
                 zigbeeData.temperature = 256*zigbeePacket[19] + zigbeePacket[20];
                 zigbeeData.humidity = 256*zigbeePacket[21] + zigbeePacket[22];
                 zigbeeData.lightIntensity = 256*zigbeePacket[23] + zigbeePacket[24];
-               
-                // display the relevant data
-                // LATER: append a time stamp and send the relevant data to the buffer
-                //showData();
+				zigbeeData.timeStamp = RTC.now();
+				zigbeeData.CO2 = -1;
+				
+				//add zigbee Adress
+				zigbeeData.nodeAddrLow = ((unsigned long)zigbeeAddress64[0])<<24;
+				zigbeeData.nodeAddrLow |= ((unsigned long)zigbeeAddress64[1])<<16;
+				zigbeeData.nodeAddrLow |= ((unsigned long)zigbeeAddress64[2])<<8;
+				zigbeeData.nodeAddrLow |= ((unsigned long)zigbeeAddress64[3]);
+				
+				zigbeeData.nodeAddrHigh = ((unsigned long)zigbeeAddress64[4])<<24;
+				zigbeeData.nodeAddrHigh |= ((unsigned long)zigbeeAddress64[5])<<16;
+				zigbeeData.nodeAddrHigh |= ((unsigned long)zigbeeAddress64[6])<<8;
+				zigbeeData.nodeAddrHigh |= ((unsigned long)zigbeeAddress64[7]);
+				
+                Serial.println(zigbeeData.nodeAddrHigh,HEX);
+                Serial.println(zigbeeData.nodeAddrLow,HEX);
              }
             // if zigbeePacket is not valid: do nothing
             else {
