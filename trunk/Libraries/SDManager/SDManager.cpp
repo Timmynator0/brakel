@@ -21,6 +21,10 @@ void SDManager::storeToBuffer(xbee_data data){
     
 }
 
+void SDManager::setNTP(NTP ntp_){
+    ntp = ntp_;
+}
+
 bool SDManager::readFromBuffer(){
     while(!buff->isEmpty(SDCARD)){
         bool result = buff->read(&buffData, SDCARD);
@@ -38,9 +42,7 @@ void SDManager::writeToSD(xbee_data *xbee, bool writeOffline ){
     
     char fileName[20];
     if(ntp.udpAvalability()){
-    
-    sprintf(fileName,"%02d%02d%02d.txt",xbee->timeStamp.day(),xbee->timeStamp.month(),xbee->timeStamp.year());
-        
+        sprintf(fileName,"%02d%02d%02d.txt",xbee->timeStamp.day(),xbee->timeStamp.month(),xbee->timeStamp.year());
     }else{
         sprintf(fileName,"temp.txt");
     }

@@ -75,6 +75,7 @@ public:
     char* getDateSD();
 	DateTime GetDateTime();
     EthernetUDP Udp2;
+    int packetSize;
     
 private:
     

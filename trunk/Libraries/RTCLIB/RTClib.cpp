@@ -298,9 +298,10 @@ bool NTP::udpAvalability(){
     
     bool isAvailable = false;
     int waitTime = 0;
-    while(!isAvailable && waitTime < 100)
+    while(!isAvailable && waitTime < 100) //todo: waiteTime 1000
     {
-        if(Udp2.available())
+        packetSize = Udp2.parsePacket();
+        if(packetSize)
         {isAvailable = true;}
         waitTime++;
         delay(1);
@@ -311,15 +312,15 @@ bool NTP::udpAvalability(){
 }
 
 bool NTP::sendRequest(){
-    
    
     sendNTPpacket2(timeServer2);
     
     bool isAvailable = false;
     int waitTime = 0;
-    while(!isAvailable && waitTime < 100)
+    while(!isAvailable && waitTime < 100) //TODO: waiteTime 1000
     {
-        if(Udp2.available())
+        packetSize = Udp2.parsePacket();
+        if(packetSize)
         {isAvailable = true;}
         waitTime++;
         Serial.println(waitTime);
@@ -329,7 +330,6 @@ bool NTP::sendRequest(){
     {
         return false;
     }else{
-    if(Udp2.parsePacket()){
         Udp2.read(pb2, NTP_PACKET_SIZE2);
         unsigned long t1, t2, t3, t4;
         t1 = t2 = t3 = t4 = 0;
@@ -365,13 +365,10 @@ bool NTP::sendRequest(){
         t4 += (2 * 3600L);     
         t4 += 1;               // adjust the delay(1000) at 
         RTC2.adjust(DateTime(t4));
-    
+        return true;
         
-    }
-    }
     
-    
-    return true;
+    }
     
 }
 
