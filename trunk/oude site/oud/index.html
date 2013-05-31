@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html lang="nl">
+	<head>
+		<meta charset="utf-8" />
+		<title>Brakel</title>
+		<meta name="viewport" content="width=device-width, initial-scale=0.7" />
+		<meta name="apple-mobile-web-app-capable" content="yes" /> 
+		
+		<link rel="apple-touch-icon" href="/images/icon_57.png"/>  	
+		<link rel="apple-touch-icon" sizes="72x72" href="/images/icon_72.png" />  
+		<link rel="apple-touch-icon" sizes="114x114" href="/images/icon_114.png" />  
+		<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+		<link rel="icon" type="image/x-icon" href="/favicon.ico" />	
+		<link rel="apple-touch-startup-image" sizes="1024x748" href="/images/ipad_landscape.png" />
+		<link rel="apple-touch-startup-image" sizes="768x1004" href="/images/ipad_portrait.png" />
+		<link rel="apple-touch-startup-image" href="/images/iphone_portrait.png" />
+		<link rel="apple-touch-startup-image" sizes="640x960" href="/images/iphone_portrait_hd.png" />
+			
+		<link rel="stylesheet" type="text/css" href="/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="/css/jquery-ui-1.8.17.custom.css" />
+		<link rel="stylesheet" href="/css/add2home.css" />
+		
+		<script type="text/javascript" src="/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-ui-1.8.17.custom.min.js"></script>
+		<script type="application/javascript" src="/js/add2home.js"></script>
+		<script type="text/javascript">
+			var key = '_v5zT6PbdGGqedKbvFuHOV6_pWOSAKxmeHh3bldkbVVkND0g';			
+
+			$(document).ready(function() {
+				autoLoad();
+				//setInterval(autoLoad, 3000);
+				function autoLoad() {
+					var currentTime = new Date();
+					$.getJSON('http://api.pachube.com/v2/feeds/47259.json?key=' + key + '&rCache=' + currentTime.getTime(), 
+						  	function(data) {
+						  		var temp = data.datastreams[0].current_value;
+						  		console.log(temp);
+						  		temp = Math.round(temp * 10) / 10;
+						  		$('#temp div.temp').html(temp);
+						  		temp = parseFloat(temp);
+						  		temp = temp + 15;
+						  		
+						  		$('#temp div.value').animate({
+						  			height: temp * 6.6 + "px",
+						  			opacity: 1
+						  		}, 3000);
+						  	}
+					);
+					
+					key = '0xLlVS6eD5mcdyWbUSmfBdhVxoBXvCFWcUTAvgg_GHd4dQAXeFYugAnNSMtGqDxXGK3BDZeziqSnfQaSEwLu36V4PiMvemJfXUuSeXcdzFIUgsdkG7vCDxO5F5DvDCU4';
+					$.getJSON('http://api.pachube.com/v2/feeds/47260.json?key=' + key + '&rCache=' + currentTime.getTime(), 
+						  	function(data) {
+						  		var temp = data.datastreams[0].current_value;
+						  		console.log(temp);
+						  		temp = Math.round(temp * 10) / 10;
+						  		$('#temp2 div.temp').html(temp);
+						  		temp = parseFloat(temp);
+						  		temp = temp + 15;
+						  		
+						  		$('#temp2 div.value').animate({
+						  			height: temp * 6.6 + "px",
+						  			opacity: 1
+						  		}, 3000);
+						  	}
+					);
+				}
+			});
+		</script>
+		<script type="text/javascript" src="/js/custom.js"></script>
+		<script type="text/javascript" src="/js/highcharts.js"></script>
+	</head>
+	<body>
+		<div id="container">
+			<h1 id="logo"><img src="/images/logo.png" alt="Logo" /></h1>
+			<div id="wrapper">
+				<div class="widget" id="temp">
+					<h2>Temperatuur 1</h2>
+					<div class="temperature">
+						<div class="value"></div>
+						<div class="temp"></div>
+					</div>
+				</div>
+				
+				<div class="widget" id="temp2">
+					<h2>Temperatuur 2</h2>
+					<div class="temperature">
+						<div class="value"></div>
+						<div class="temp"></div>
+					</div>
+				</div>
+				
+				<div class="widget" id="chart">
+					<h2>Temperatuur Grafiek</h2>
+					<div id="temperature_chart">
+					</div>
+				</div>
+				<!--<div class="widget" id="wind">
+					<h2>Windsnelheid</h2>
+					<div class="value"></div>
+				</div>-->
+			</div>
+		</div>	
+	</body>
+</html>

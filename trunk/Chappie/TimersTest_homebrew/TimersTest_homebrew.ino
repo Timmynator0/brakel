@@ -23,8 +23,10 @@ XBeeResponse resp;
 
 void setup()
 {
+  initTimers(); 
   //Open Serial communications and wait for port to open
   Serial.begin(9600);
+  Serial1.begin(9600);
   Serial.println("Starting Ethernet");
   if(Ethernet.begin(mac) == 0) 
   {
@@ -32,7 +34,7 @@ void setup()
     //no point in carrying on, so do nothing.
     for(;;);
   }
-  delay(1000);//give the Ethernetshield a second to initialize
+ // delay(1000);//give the Ethernetshield a second to initialize
 
   Serial.println("Connecting to the server...");
   //if you get a connection, report back via serial
@@ -43,14 +45,14 @@ void setup()
     client.println("GET");
     client.println();
   }
-  Serial1.begin(9600);
-  xbee.setSerial(Serial);
-  initTimers(); 
+  
+ xbee.setSerial(Serial);
+  
 }
 
 void initTimers(void)
 {
-  Timers1.initialize(500,1); // delay in milliseconden,which timer
+  Timers1.initialize(5000,1); // delay in milliseconden,which timer
   Timers1.attachInterruptTimer1(firstFunction);
 
   Timers3.initialize(1000,3);
@@ -116,6 +118,7 @@ void loop()
   }
   else
     Serial.println("No node Available!"); 
+    delay(3000);
 }
 
 

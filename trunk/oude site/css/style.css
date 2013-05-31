@@ -1,0 +1,187 @@
+/* Reset */
+ul {
+	margin: 0;
+	padding: 0;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #d8d9da
+}
+
+body {
+	background-color: #FDFDFE;
+}
+
+#container {
+	margin: 0 auto;
+	width: 1024px;
+	position: relative;
+}
+
+#headerImage {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 10;
+}
+
+header .top {
+	height: 120px;
+	position: relative;
+	background-image: linear-gradient(left , #FDFDFE 0%, #0099D5 100%);
+	background-image: -o-linear-gradient(left , #FDFDFE 0%, #0099D5 100%);
+	background-image: -moz-linear-gradient(left , #FDFDFE 0%, #0099D5 100%);
+	background-image: -webkit-linear-gradient(left , #FDFDFE 0%, #0099D5 100%);
+	background-image: -ms-linear-gradient(left , #FDFDFE 0%, #0099D5 100%);
+
+	background-image: -webkit-gradient(
+		linear,
+		left 50,
+		right 50,
+		color-stop(0, #FDFDFE),
+		color-stop(1, #0099D5)
+	);
+}
+
+header .top a {
+	margin: 20px;
+	display: block;
+	float: left;
+}
+
+header .middle {
+	height:40px;
+	background-color: #009cdc;
+	padding-left:30px;
+}
+
+header .middle div {
+	float:left;
+	margin:0px 10px;
+}
+
+header .middle div img {
+	float:left;
+	height:20px;
+	width:20px;
+	margin-top:10px;
+	border-radius:0.2em;
+}
+
+header .middle div span {
+	float:left;
+	line-height:39px;
+	margin-left:5px;
+	color:#EEE;
+}
+
+
+header .bottom {
+	width: 39px;
+	height: 43px;
+	float: right;
+	background: transparent url('/images/header_bottom.png') no-repeat;
+}
+
+#content {
+	padding: 20px;
+	width: 984px;
+	min-height: 300px;
+	/*background: transparent url('/images/footer_line.jpg') bottom repeat-x;*/
+}	
+
+#footer {
+	overflow: hidden;
+	width:1024px;
+	height:144px;
+	position:fixed;
+	bottom:0px;
+	border-top:solid 10px #95bc0e;
+	
+	background-image: linear-gradient(top, #FFFFFF 30%, #D9DADB 100%);
+	background-image: -o-linear-gradient(top, #FFFFFF 30%, #D9DADB 100%);
+	background-image: -moz-linear-gradient(top, #FFFFFF 30%, #D9DADB 100%);
+	background-image: -webkit-linear-gradient(top, #FFFFFF 30%, #D9DADB 100%);
+	background-image: -ms-linear-gradient(top, #FFFFFF 30%, #D9DADB 100%);
+
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0.3, #FFFFFF),
+		color-stop(1, #D9DADB)
+	);
+}
+
+#footer ul {
+	margin: 0;
+	list-style: none;
+	float: left;
+}
+
+#footer ul li {
+	padding:10px 0px 20px;
+	float: left;
+}
+
+#footer ul li:hover,
+#footer ul li.active {
+	background-color: #95bc0e;
+}
+
+#footer ul li a {
+	margin: 0 4.88px;
+	padding: 90px 0 0 0;
+	width: 100px;
+	height: 30px;
+	display: block;
+	background-color: #FFF;
+	color: #8a8a8a;
+	border: 2px solid #d8d9da;
+	text-decoration: none;
+	text-align: center;
+	background-position: center 10px;
+	background-repeat: no-repeat;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+#footer ul li a.home { background-image: url('/images/menu_home.png'); }
+#footer ul li a.temperatuur { background-image: url('/images/menu_temperatuur.png'); }
+#footer ul li a.meteo { background-image: url('/images/menu_meteo.png'); }
+#footer ul li a.vochtigheid { background-image: url('/images/menu_vochtigheid.png'); }
+#footer ul li a.groepen { background-image: url('/images/menu_groepen.png'); }
+#footer ul li a.schakelkast { background-image: url('/images/menu_schakelkast.png'); }
+#footer ul li a.luchtkwaliteit { background-image: url('/images/menu_luchtkwaliteit.png'); }
+#footer ul li a.lux { background-image: url('/images/menu_lux.png'); }
+#footer ul li a.alarm { background-image: url('/images/menu_alarm.png'); }
+
+#loginForm { width:430px; margin:100px auto; }
+#loginForm div { clear:both;  margin:2px; }
+#loginForm span { float:right; text-align:right; margin:2px; padding:3px; height:24px; line-height:24px; color:#555; font-size:14px; font-weight:bold;}
+#loginForm input[type="password"], #loginForm select { float:right; width:308px; margin:2px; padding:3px; height:20px; }
+#loginForm select { height: 30px; width: 318px; font-weight:bold; color:#555; }
+#loginForm option { font-weight:bold; color:#555; }
+
+#loginForm .errorLogin { text-align:center; color:#F00; }
+
+#loginForm input[type="submit"] { float:right; width:320px; margin:2px; margin-right:0px; padding:3px; height:30px; border-radius:0.7em; color:#FFF; font-weight:bold; border:none; cursor:pointer;
+	/*background:#3F6FB3;*/
+	background: #9acae9; /* Old browsers */
+	background: -moz-linear-gradient(top, #9acae9 0%, #2989d8 100%, #207cca 100%, #158bbc 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#9acae9), color-stop(100%,#2989d8), color-stop(100%,#207cca), color-stop(100%,#158bbc)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #9acae9 0%,#2989d8 100%,#207cca 100%,#158bbc 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #9acae9 0%,#2989d8 100%,#207cca 100%,#158bbc 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #9acae9 0%,#2989d8 100%,#207cca 100%,#158bbc 100%); /* IE10+ */
+	background: linear-gradient(top, #9acae9 0%,#2989d8 100%,#207cca 100%,#158bbc 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9acae9', endColorstr='#158bbc',GradientType=0 ); /* IE6-9 */
+}
+
+.hideButtons ul { display:none; }
