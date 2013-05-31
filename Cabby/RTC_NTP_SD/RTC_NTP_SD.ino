@@ -8,55 +8,39 @@
 #include <Buffer.h>
 #include <BufferManager.h>
 
-//NTP ntp;
-
+NTP ntp;
 SDManager manager;
 
 xbee_data data;
 
 void setup(){
   Serial.begin(9600);
-   manager.initSD();
+   Serial.println(manager.initSD());
   
   delay(1000);
  
-//  ntp.setup();
+  if(ntp.setup())
+    Serial.println("Inet succes");
   
+  manager.setNTP(ntp);
+  
+  if(ntp.sendRequest())
+      Serial.println("Time Updated");
 }
 
 void loop(){
-  
-   Serial.println("Started");
 
-//   ntp.init();
-//   data.timeStamp = ntp.GetDateTime();
-   
-   data.temperature = 1;
-   data.lightIntensity = 2;
-   data.CO2 = 3;
-   data.humidity = 4;
-   data.nodeAddrLow = 5;
-   data.nodeAddrHigh = 6;
-   
-   manager.writeToSD(&data, true);
-   delay(1000);
+   data.timeStamp = ntp.GetDateTime();
+   data.lightIntensity = 12;
+   manager.storeToBuffer(data);
+   manager.readFromBuffer();
 
-   Serial.println("Done Writing......");
+  ntp.PrintDateTime();
   
-//  ntp.PrintDateTime();
-//  Serial.println("Start Reading......");
-//  delay(1000);
-//  
-  manager.readFromSD("offline.txt");
-  Serial.println("Done Reading......");
+  Serial.println("Done ");
+  Serial.println();
   
-  
-  
-  
-  
-  
-  
-  
+  delay(10* 1000);
   
   
 //
@@ -68,13 +52,25 @@ void loop(){
 //    Serial.println(d[i].temperature);
 //  
 //   }
-    delay(60L * 1000L);
+//    delay(60L * 1000L);
 
 }
 
 
-//void setBufferManager(BufferManager *b){
-//    buff = &b;
-//    
-//}
+
+
+void serialEvent() 
+{
+  while (Serial.available()) 
+  {
+    char ch = (char)Serial.read();
+    if( ch >= '0' && ch <= '9' )
+    {
+      xbee_data data2 = {
+        0,int(ch),12,0,0,0,0      };
+      manager.storeToBuffer(data2);
+       
+    }
+  }
+}
 

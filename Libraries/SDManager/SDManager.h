@@ -26,6 +26,7 @@ public:
     
     void dataToFile(File file, xbee_data *xbee,bool filePath);
     
+    void setNTP(NTP ntp_);
     
     NTP ntp;
     xbee_data data[100];
