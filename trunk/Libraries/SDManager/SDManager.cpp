@@ -41,10 +41,11 @@ void SDManager::writeToSD(xbee_data *xbee, bool writeOffline ){
     
     
     char fileName[20];
-    if(ntp.udpAvalability()){
+    if(ntp.udpAvalability()&& xbee->timeStamp.year() != 2165){
+       
         sprintf(fileName,"%02d%02d%02d.txt",xbee->timeStamp.day(),xbee->timeStamp.month(),xbee->timeStamp.year());
     }else{
-        sprintf(fileName,"temp.txt");
+        sprintf(fileName,"nontp.txt");
     }
 
     
@@ -62,8 +63,10 @@ void SDManager::writeToSD(xbee_data *xbee, bool writeOffline ){
     }else{
         if(initSD()){
             myFile = SD.open(fileName, FILE_WRITE);
-            if(myFile)
+            if(myFile){
                 dataToFile(myFile, xbee, filePathCheck);
+                myFile.close();
+            }
         }
     }
         

@@ -1,8 +1,8 @@
-#include "Arduino.h"
+
 
 #ifndef __SDManager_H__
 #define __SDManager_H__
-
+#include "Arduino.h"
 #include <SD.h>
 #include <string.h>
 #include <Types.h>
