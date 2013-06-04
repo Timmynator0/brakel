@@ -280,13 +280,13 @@ bool NTP::setup(){
     
     int DHCP2 = 0;
     DHCP2 = Ethernet.begin(mac2);
-    
+    Serial.println("Succes");
     Udp2.begin(localPort2);
     Wire.begin();
     RTC2.begin();
     nodeCount = 0;
     if(DHCP2)
-        return true;
+        return sendRequest();
     else
         return false;
 
@@ -304,6 +304,7 @@ bool NTP::udpAvalability(){
         if(packetSize)
         {isAvailable = true;}
         waitTime++;
+        Serial.println(waitTime);
         delay(1);
     }
     
@@ -323,7 +324,6 @@ bool NTP::sendRequest(){
         if(packetSize)
         {isAvailable = true;}
         waitTime++;
-        Serial.println(waitTime);
         delay(1);
     }
     if (!isAvailable)
@@ -365,6 +365,7 @@ bool NTP::sendRequest(){
         t4 += (2 * 3600L);     
         t4 += 1;               // adjust the delay(1000) at 
         RTC2.adjust(DateTime(t4));
+       
         return true;
         
     
