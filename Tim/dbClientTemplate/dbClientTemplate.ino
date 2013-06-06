@@ -72,8 +72,8 @@ String dataString = xmlStart;
     buffermanagerInstance.read(&data, DATABASE);
     String datapoint = datapointStart + timeStart + data.timeStamp.unixtime() + timeEnd + temperatureStart + data.temperature + temperatureEnd + CO2Start + data.CO2 +  CO2End + humidityStart + data.humidity + humidityEnd +  lightStart + data.lightIntensity + lightEnd + NodeAdressLowStart + data.nodeAddrLow + NodeAdressLowEnd + NodeAdressHighStart + data.nodeAddrHigh + NodeAdressHighEnd + datapointEnd;
     dataString += datapoint;
-    datapoint.
-    count ++;    
+    
+    count++;    
     
   }
 
