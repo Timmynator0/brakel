@@ -27,10 +27,7 @@ public:
     void dataToFile(File file, xbee_data *xbee,bool filePath);
     
     void setNTP(NTP ntp_);
-    
-    NTP ntp;
-    xbee_data data[100];
-    xbee_data offlineData[100];
+	
     xbee_data *getData();
     xbee_data *getOFflineData();
     

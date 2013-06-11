@@ -2,9 +2,17 @@
 #include <Timers.h>
 #include <Ethernet.h>
 #include <SPI.h>
+#include <XBee1.h>
 
 File myReadFile;
 File myWriteFile;
+
+XBee xbee = XBee();
+XBeeResponse resp;
+
+float temperature = -1;
+float humidity = -1;
+float lightIntensity = -1;
 
 // bool to indicate wheter or not the file is beining used by an other timer
 volatile bool writing_lock = false;
@@ -20,12 +28,36 @@ void setup()
   initSD();
   delay(100);
   initTimers();
-
+  xbee.setSerial(Serial);
 }
 
 void loop()
 {
-
+  xbee.readPacket();
+  if ( xbee.getResponse().isAvailable() )
+  { 
+    // get response
+    resp = xbee.getResponse();
+    if(xbee.getResponse().getApiId() == ZB_IO_SAMPLE_RESPONSE)
+    {
+      ZBRxIoSampleResponse response = ZBRxIoSampleResponse();
+      resp.getZBRxIoSampleResponse(response);
+      if(response.containsAnalog())
+      {
+        //parse and save locally
+        temperature = (response.getAnalog(1)/1023.f*1.22f-0.5f)*100;
+        humidity = response.getAnalog(2)/10.f;
+        lightIntensity = response.getAnalog(3)/10.23f;
+      }
+    }
+  }
+  else
+  {
+    Serial.println("No node Available!");
+     delay(3000);
+  }
+    
+    delay(50);
 }
 
 void initSD()
@@ -89,19 +121,20 @@ void writeAction()
     ;
   }
   writing_lock = true;
-  Serial.println("writing");
+ // Serial.println("writing");
   writeSD();
   writing_lock = false;
 }
 
 void readAction()
+
 {        
   while(reading_lock)
   {
     ;
   }
   reading_lock = true;
-  Serial.println("reading from the first timer");
+  //Serial.println("reading from the first timer");
   readSD();
   reading_lock = false;
 }
@@ -113,7 +146,7 @@ void readAction2()
     ;
   }
   reading_lock = true;
-  Serial.println("Reading from the second timer");
+  //Serial.println("Reading from the second timer");
   readSD();
   reading_lock = false;
 }
@@ -131,8 +164,8 @@ void readSD()
   if (myReadFile) {
     //Serial.println("test.txt:");
     readingTimes++;
-    Serial.print("readed: ");
-    Serial.println(readingTimes);
+   // Serial.print("readed: ");
+    //Serial.println(readingTimes);
     // read from the file until there's nothing else in it:
     /*while (myReadFile.available())
      		{
@@ -161,8 +194,8 @@ void writeSD()
   if (myWriteFile) {
     //erial.print("Writing to test.txt...");
     //	String data = "Number  test test test !";
-    myWriteFile.print("Number : ");
-    myWriteFile.println(i);
+   // myWriteFile.print("Number : ");
+   // myWriteFile.println(i);
     //Serial.println(i);
     i ++ ;
 

@@ -365,7 +365,7 @@ bool NTP::sendRequest(){
         t4 += (2 * 3600L);     
         t4 += 1;               // adjust the delay(1000) at 
         RTC2.adjust(DateTime(t4));
-       
+		
         return true;
         
     
@@ -431,7 +431,7 @@ int NTP::getSecond(){
 char* NTP::getDateSD(){
     DateTime t = RTC2.now();
     char *result = "T";
-    sprintf(result,"%02d%02d%02d.txt",t.day(),t.month(),t.year());
+    sprintf(result,"%02d-%02d-%02d.txt",t.day(),t.month(),t.year());
     return result;
 }
 
