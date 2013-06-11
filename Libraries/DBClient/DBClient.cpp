@@ -138,10 +138,7 @@ void DBClient::xmlBuildMessage()
 
 
 void DBClient::dbClientSend()
-{
-    
-   Serial.println("blaaa");
-    
+{   
     if (client->connect(server, 80)) 
 	{
      xmlBuildMessage();
