@@ -42,7 +42,11 @@
 #define IO_DATA_ID           0x92;   // the ID value of a IO data zigbeePacket
 #define TRUE   1
 #define FALSE  0
-
+class BrakelZigbee
+{
+public:
+	void setNTP(NTP *rtc);
+};
 extern byte zigbeePacket[30];                  // an array to hold incoming data
 extern byte zigbeeAddress64[8];                // array for the 64-bits network address
 extern int  zigbeePacketIndex;             // pointer in zigbeePacket array
@@ -58,7 +62,7 @@ extern byte checksum;                // calculated checksum
 // recieved 10-bit values for the temperature, the humidity and the light intensity
 
 extern xbee_data zigbeeData;
-extern RTC_DS1307 RTC;
+extern NTP *rtc;
 
 extern bool zigbeeParsePacket();
 #endif

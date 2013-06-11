@@ -22,9 +22,9 @@ byte checksum = 0;                // calculated checksum
 // recieved 10-bit values for the temperature, the humidity and the light intensity
 
 xbee_data zigbeeData;
-RTC_DS1307 RTC;
 
 bool zigbeeParsePacket();
+NTP *rtc;
 
 
 //function used for decryption of a zigbee packet. 
@@ -46,7 +46,7 @@ bool zigbeeParsePacket() {
         zigbeePacket[zigbeePacketIndex] = inByte;                          // store the byte in the array
         // for testing: 
         //Serial3.print(zigbeePacketIndex); Serial3.print(":"); Serial3.println(zigbeePacket[zigbeePacketIndex], HEX);
-        if (zigbeePacketIndex == 2) {                                // read zigbeePacket length
+        if (zigbeePacketIndex == 2) { 		// read zigbeePacket length
             zigbeePacketLength = inByte+4;                          // the read value is the #bytes 
                                                               //    between the length and the checksum
                                                               //    the total length is 4 bytes more
@@ -76,7 +76,8 @@ bool zigbeeParsePacket() {
                 zigbeeData.temperature = 256*zigbeePacket[19] + zigbeePacket[20];
                 zigbeeData.humidity = 256*zigbeePacket[21] + zigbeePacket[22];
                 zigbeeData.lightIntensity = 256*zigbeePacket[23] + zigbeePacket[24];
-				zigbeeData.timeStamp = RTC.now();
+				zigbeeData.timeStamp = rtc->GetDateTime();
+				
 				zigbeeData.CO2 = -1;
 				
 				//add zigbee Adress
@@ -90,8 +91,10 @@ bool zigbeeParsePacket() {
 				zigbeeData.nodeAddrHigh |= ((unsigned long)zigbeeAddress64[6])<<8;
 				zigbeeData.nodeAddrHigh |= ((unsigned long)zigbeeAddress64[7]);
 				
+				/*
                 Serial.println(zigbeeData.nodeAddrHigh,HEX);
-                Serial.println(zigbeeData.nodeAddrLow,HEX);
+                Serial.println(zigbeeData.nodeAddrLow,HEX);*/
+				return true;
              }
             // if zigbeePacket is not valid: do nothing
             else {
@@ -102,6 +105,11 @@ bool zigbeeParsePacket() {
       zigbeePacketIndex ++;
     } 
   }
-  return true;
+  return false;
+}
+
+void BrakelZigbee::setNTP(NTP *rtc)
+{
+	rtc = rtc;
 }
 //#endif _BrakelZigbee_CPP_

@@ -1,6 +1,6 @@
 #include <SPI.h>
 #include <RTClib.h>
-
+#include <Types.h>
 #include <Ethernet.h>
 #include <EthernetUdp.h>
 #include <Wire.h>
