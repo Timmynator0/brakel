@@ -148,8 +148,8 @@ void serialEvent3() {
 
 void sdHandler(void)
 {
-  //Serial.print("timertick");
-    Serial.println(freeMemory());
+  Serial.println("timertick");
+    //Serial.println(freeMemory());
     
     //xbee_data datading;
     //bufferManager.read(&datading, DATABASE);
@@ -159,8 +159,15 @@ void sdHandler(void)
 }
 
 void transmitDb(void)
-{ 
+{   
+    schedulerLock = true;
     dbClient.dbClientSend();
+    
+    while(client2.available())
+    {
+     delay(1);  
+    }
+    schedulerLock = false;
 }
 
 void ntpHandler(void)
