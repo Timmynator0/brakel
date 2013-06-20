@@ -27,7 +27,7 @@ const char xmlStart[] PROGMEM = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/20
 const char xmlEnd[] PROGMEM = " </XbeeDataPoints> </storedata> </soap:Body></soap:Envelope>";
 char txbuf[MAXBUFFERSIZE] = {'\0'};
 int index = 0;
-IPAddress server(145,48,228,141); // the IP adress of the ASP Server
+IPAddress server(145,48,6,30); // the IP adress of the ASP Server
 
 
 void DBClient::setBufferManager(BufferManager *b)
@@ -139,45 +139,63 @@ void DBClient::xmlBuildMessage()
 
 void DBClient::dbClientSend()
 {
-Serial.println("whoop") ;
-  if (!client->connected() && lastConnected) {
-    Serial.println();
-    Serial.println("disconnecting. cause: FINISHED!");
-    client->stop();
-  }
-
-
+ 
 if(!client->connected())
 {
-
-	Serial.println("whut!?");
-	if (client->connect(server, 80)) 
+	if(!client->connect(server, 80))
 	{
+ // if you couldn't make a connection:
+    Serial.println("connection failedldgsdkshjgs");
+    client->stop();
+	return;
+	}
+
+ }
+
+ 
+	
+	
+// Serial.println("whoop") ;
+  // if (!client->connected() && lastConnected) {
+    // Serial.println();
+    // Serial.println("disconnecting. cause: FINISHED!");
+    // client->stop();
+  // }
+
+
+//if(!client->connected())
+//{
+
+//	Serial.println("whut!?");
+//	if (client->connect(server, 80)) 
+//	{
     Serial.println("SERVER IS ONLINE!") ;
 	xmlBuildMessage();
     client->print("POST /Receive/WebService.asmx HTTP/1.1 \r\n");
     client->print("User-Agent: curl/7.24.0 (x86_64-apple-darwin12.0) libcurl/7.24.0 OpenSSL/0.9.8r zlib/1.2.5 \r\n");
-    client->print("Host: 145.48.228.141 \r\n");
+    client->print("Host: 145.48.6.30 \r\n");
+	client->print("Connection:  close \r\n");
     client->print("SOAPAction:localhost/Receive/storedata \r\n");
     client->print("Content-Type:text/xml;charset=utf-8 \r\n");
     client->print("Content-Length: " + (String) xmlBuildSize() + " \r\n");
     client->print("\r\n");
     xmlBuildTransmitBuffer();
     client->print("\r\n"); 
-    }
-    else
-    {
+	client->flush();
+ //   }
+ //   else
+  //  {
     
     // if you couldn't make a connection:
-    Serial.println("connection failedldgsdkshjgs");
-    client->stop();
-	}
+   // Serial.println("connection failedldgsdkshjgs");
+  //  client->stop();
+//	}
 }
 
-	Serial.print("is client connected?  : ");
-	Serial.println(client->connected());
-	 lastConnected = client->connected();
-}
+	//Serial.print("is client connected?  : ");
+	//Serial.println(client->connected());
+	//lastConnected = client->connected();
+	 
 
 
 void DBClient::getResponse()
