@@ -18,6 +18,7 @@ typedef struct
 // Global parameters
 static unsigned long previousMilliSeconds = 0;
 static SCHEDULER_EVENT_STRUCT schedulerEvents[SCHEDULER_MAX_NUMBER_OF_EVENTS];
+extern bool schedulerLock;
 
 // Function prototypes
 bool addSchedulerEvent( void(*event)(void), unsigned long interval, unsigned char id );
