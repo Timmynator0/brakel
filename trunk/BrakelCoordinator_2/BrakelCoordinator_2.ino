@@ -112,10 +112,10 @@ void setup()
   initScheduler();
   
   //sdEvent
-  addSchedulerEvent(sdHandler, 20, 1); //Interval van 1 seconde en ID van 1. 
+  addSchedulerEvent(sdHandler, 5, 1); //Interval van 1 seconde en ID van 1. 
   //tnpEvent
   addSchedulerEvent(ntpHandler, 86400, 2); //Interval van 1 dag en ID van 2. 
-  addSchedulerEvent(transmitDb, 100, 3); //Interval van 1 seconde en ID van 1.
+  addSchedulerEvent(transmitDb, 20, 3); //Interval van 1 seconde en ID van 1.
   //lcdEvent
   //  addSchedulerEvent(lcdHandler, 2, 3); //Intervan van 1 seconde en ID van 3. 
   Timers1.initialize(10, 1);//10 milliseconden wachten om samen met het interval van de sheduler van 100 ms het interval op 1 seonde te leggen.
@@ -148,9 +148,7 @@ void serialEvent3() {
 
 void sdHandler(void)
 {
-  Serial.println("timertick");
-    //Serial.println(freeMemory());
-    
+
     //xbee_data datading;
     //bufferManager.read(&datading, DATABASE);
     //bufferManager.read(&datading, SDCARD);
@@ -160,14 +158,12 @@ void sdHandler(void)
 
 void transmitDb(void)
 {   
+  Serial.println("freememory: ");
+  Serial.println(freeMemory());
+    
     schedulerLock = true;
     dbClient.dbClientSend();
-    
-    while(client2.available())
-    {
-     delay(1);  
-    }
-    schedulerLock = false;
+     schedulerLock = false;
 }
 
 void ntpHandler(void)
