@@ -1,24 +1,30 @@
 #include <Scheduler.h>
+
+bool schedulerLock = false;
+
 // 
 // Dispatch all schedular events
 //
 void handleScheduler()
 {
-  for( unsigned char idx = 0; idx < SCHEDULER_MAX_NUMBER_OF_EVENTS; idx++ )
-  {
-    if( schedulerEvents[idx].isActive )
-    {
-      if( schedulerEvents[idx].counter < schedulerEvents[idx].interval )
-      {
-        schedulerEvents[idx].counter++;
-      }
-      else
-      {
-        schedulerEvents[idx].handler();
-        schedulerEvents[idx].counter = 0;
-      }
-    }
-  }
+	if(!schedulerLock)
+	{
+		for( unsigned char idx = 0; idx < SCHEDULER_MAX_NUMBER_OF_EVENTS; idx++ )
+		{
+			if( schedulerEvents[idx].isActive )
+			{
+				if( schedulerEvents[idx].counter < schedulerEvents[idx].interval )
+				{
+					schedulerEvents[idx].counter++;
+				}
+				else
+				{
+					schedulerEvents[idx].handler();
+					schedulerEvents[idx].counter = 0;
+				}
+			}
+		}
+	}
 }
 
 //
