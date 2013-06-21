@@ -1,7 +1,7 @@
 // Scheduler
 #ifndef _Scheduler_h_
 #define _Scheduler_h_
-
+#include "Arduino.h"
 typedef struct
 {
   void (*handler)(void);

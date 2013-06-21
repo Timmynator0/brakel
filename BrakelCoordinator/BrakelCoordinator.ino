@@ -1,4 +1,4 @@
- #include <BrakelZigbee.h>
+#include <BrakelZigbee.h>
 #include <Buffer.h>
 #include <BufferManager.h>
 #include <RTClib.h>
@@ -15,17 +15,21 @@
 #include <String.h>
 #include <LCD.h>
 #include <MemoryFree.h>
+#include <DBClient.h>
 
 #define SD_INTERVAL 100
 
 NTP ntp;
 BufferManager bufferManager;
 BrakelZigbee bxbee;
-
+DBClient dbClient;
 SDManager sdManager;
 bool debug = true;
 
 
+
+byte mac[] = { 
+  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 const String savingFailed = "Saving Failed";
 const String savingSucces = "Saving Succes";
 
@@ -50,33 +54,37 @@ void SchedulerHandler(void)
     handleScheduler();
   }
 }
-byte mac[] = { 
-  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+
+EthernetClient client2;
 void setup()
 {
   boolean retVal = true;
   Serial.begin(9600);
   Serial3.begin(9600);
-  Serial.println(sdManager.initSD());
 
-  sdManager.setBufferManager(&bufferManager);
   //noInterrupts();
   Serial.println("getting ip");
-  //  while (Ethernet.begin(mac) != 1)
-  //  {
-  //    Serial.println("Error getting IP address via DHCP, trying again...");
-  //    delay(15000);
-  //  }
-  if(ntp.setup())
+
+  while (Ethernet.begin(mac) != 1)
   {
-    Serial.println("NTP done" );
-    
-   // sdManager.setNTP(&ntp); 
-    bxbee.setNTP(&ntp);
+    Serial.println("Error getting IP address via DHCP, trying again...");
+    delay(15000);
   }
   Serial.println("got ip");
 
 
+  if(ntp.setup())
+  {
+    Serial.println("NTP done" );
+
+    bxbee.setNTP(&ntp);
+  }
+  Serial.println(sdManager.initSD());
+  sdManager.setBufferManager(&bufferManager);
+
+  dbClient.setEthernetClient(&client2);
+  dbClient.setBufferManager(&bufferManager);
+ dbClient.dbClientSend();
   initScheduler();
   //sdEvent
   addSchedulerEvent(sdHandler, 2, 1); //Interval van 1 seconde en ID van 1. 
@@ -115,12 +123,13 @@ void serialEvent3() {
 void sdHandler(void)
 {
   Serial.print("freeMemory()=");
-    Serial.println(freeMemory());
-    
-    xbee_data datading;
-    bufferManager.read(&datading, DATABASE);
-    //bufferManager.read(&datading, SDCARD);
-    sdManager.readFromBuffer();
+  Serial.println(freeMemory());
+
+  //  xbee_data datading;
+  //  bufferManager.read(&datading, DATABASE);
+  //bufferManager.read(&datading, SDCARD);
+  dbClient.dbClientSend();
+  sdManager.readFromBuffer();
 }
 
 void ntpHandler(void)
@@ -132,6 +141,8 @@ void lcdHandler(void)
 {
   LCDUpdate();
 }
+
+
 
 
 
