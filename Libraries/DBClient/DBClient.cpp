@@ -85,7 +85,7 @@ void DBClient::xmlBuildStringItem( const char *str )
 void DBClient::xmlBuildDataItem(int data)
 {  
   // convert data to char[]
-  char tmp[8] = {'\0'};
+  char tmp[10] = {'\0'};
   itoa(data,tmp,10);
     
   // print in buffer
@@ -121,6 +121,9 @@ void DBClient::xmlBuildMessage()
       xmlBuildStringItem(datapointEnd);
       count++;    
     }
+	Serial.print("sending ");
+	Serial.print(count);
+	Serial.println(" nodes");
     xmlBuildStringItem( xmlEnd ); 
 }
 
@@ -144,7 +147,7 @@ void DBClient::dbClientSend()
 		client->print("POST /Receive/WebService.asmx HTTP/1.1 \r\n");
 		client->print("User-Agent: curl/7.24.0 (x86_64-apple-darwin12.0) libcurl/7.24.0 OpenSSL/0.9.8r zlib/1.2.5 \r\n");
 		client->print("Host: 145.48.6.30 \r\n");
-		client->print("Connection:  close \r\n");
+		client->print("Connection:  keep-alive \r\n");
 		client->print("SOAPAction:localhost/Receive/storedata \r\n");
 		client->print("Content-Type:text/xml;charset=utf-8 \r\n");
 		client->print("Content-Length: " + (String) xmlBuildSize() + " \r\n");
