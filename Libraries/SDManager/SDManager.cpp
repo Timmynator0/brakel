@@ -217,10 +217,9 @@ void SDManager::removeFile(char *file){
 }
 
 
-bool SDManager::isEmpty(){
-    
-    myFile = SD.open("offline.txt");
-    return myFile;
+bool SDManager::isOfflineEmpty()
+{
+    return SD.exists("offline.txt");
 }
 
 
