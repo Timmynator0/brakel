@@ -29,7 +29,7 @@ public:
     void setNTP(NTP ntp_);
 	
     xbee_data *getData();
-    xbee_data *getOFflineData();
+    xbee_data *getOFflineData(xbee_data *data);
     
     xbee_data buffData;
     BufferManager *buff;
