@@ -231,12 +231,13 @@ int SDManager::getDataSize(){
 xbee_data *SDManager::getData(){
     return data;
 }
-
-
-xbee_data *SDManager::getOFflineData(){
-    return offlineData;
-}
 */
+
+xbee_data *SDManager::getOFflineData(xbee_data *data){
+    data = &offlineData;
+    return data;
+}
+
 void SDManager::setBufferManager(BufferManager *b)
 {
     buff = b;
