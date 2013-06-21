@@ -20,32 +20,34 @@ namespace BrakelWeb.Receive
    [System.Web.Script.Services.ScriptService]
     public class WebService : System.Web.Services.WebService
     {
+
         DAL.StorageProvider dal = new StorageProvider(); // initialize data acces layer
 
 
         [WebMethod]    
         public Boolean storedata(List<XbeeData> XbeeDataPoints)
         {
-           List<DataPoint> dataPointList = new List<DataPoint>();
+
+            List<DataPoint> dataPointList = new List<DataPoint>();
+             List<Node> nodeList = new List<Node>();
             foreach(XbeeData data in XbeeDataPoints)
             {
 
-                //data.Id;
-                //data.Time;
-                //data.Temperature;
-                //data.CO2;
-                //data.Humidity;
-                //data.Light;
-                //data.NodeAdressHigh;
-                //data.NodeAdressLow;
-               
+               nodeList.Add(new Node { Location = "default", 
+                                       NodeAdress = data.NodeAdressHigh + data.NodeAdressLow, 
+                                       ObjectActive = true, 
+                                       Type = 1}) ;
+
+
                 dataPointList.Add( new DataPoint { Time = data.Time, Temperature = data.Temperature,
                                 CO2 = data.CO2 , Humidity = data.Humidity, Light = data.Light, 
                                 NodeAdress = data.NodeAdressHigh + data.NodeAdressLow });
+
+
             }
 
          
-            return dal.storeDataList(dataPointList);
+            return dal.storeDataList(dataPointList, nodeList);
         }
     }
 }

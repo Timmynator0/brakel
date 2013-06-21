@@ -41,7 +41,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/17/2013 10:31:29</publishTime>
     </File>
     <File Include="bin/BrakelWeb.dll">
-      <publishTime>05/23/2013 14:48:41</publishTime>
+      <publishTime>06/21/2013 14:30:10</publishTime>
     </File>
     <File Include="bin/DotNetOpenAuth.AspNet.dll">
       <publishTime>05/17/2013 10:31:33</publishTime>
@@ -406,8 +406,11 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Site.Master">
       <publishTime>05/17/2013 10:31:06</publishTime>
     </File>
+    <File Include="Temperature.aspx">
+      <publishTime>06/21/2013 14:25:39</publishTime>
+    </File>
     <File Include="Web.config">
-      <publishTime>05/23/2013 14:48:43</publishTime>
+      <publishTime>06/21/2013 14:30:13</publishTime>
     </File>
   </ItemGroup>
 </Project>
