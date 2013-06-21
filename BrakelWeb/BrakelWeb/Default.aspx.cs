@@ -4,40 +4,36 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.DataVisualization.Charting;
+using BrakelWeb.DAL;
 using BrakelWeb.Models;
 
 namespace BrakelWeb
 {
-    public partial class _Default : Page
+    public partial class Temperature : System.Web.UI.Page
     {
-        protected void Page_Load(object sender, EventArgs e)
+        DAL.StorageProvider dal = new StorageProvider();
+
+        private void Page_Load(object sender, System.EventArgs e)
         {
-            using (var db = new BrakelContext())
+
+
+            List<XbeeData> temperatureList = dal.getDataPointsTemperature();
+
+            foreach (XbeeData temperature in temperatureList)
             {
-                // Create and save a new Blog
-                System.Diagnostics.Debug.WriteLine("Enter a name for a new Blog: ");
-                Random autoRand = new Random();
-                var name = "whoop" + autoRand.Next();
-
-                var node = new Node { NodeAdress = name, Location = "bla" , Type = 1 , ObjectActive= true };
-                var data = new DataPoint { Id = autoRand.Next(), NodeAdress = name };
-                db.Nodes.Add(node);
-                db.SaveChanges();
-
-                // Display all Blogs from the database
-                var query = from b in db.Nodes
-                            orderby b.NodeAdress
-                            select b;
-
-                System.Diagnostics.Debug.WriteLine("All blogs in the database:");
-                foreach (var item in query)
-                {
-                    System.Diagnostics.Debug.WriteLine(item.NodeAdress);
-                }
-
-                System.Diagnostics.Debug.WriteLine("Press any key to exit...");
-                //  Console.ReadKey();
+                // yValue = yValue + (random.NextDouble() * 10.0 - 5.0);
+                Chart1.Series["Temperature"].Points.AddY(temperature.Temperature);
+                Chart1.Series["CO2"].Points.AddY(temperature.CO2);
+                Chart1.Series["Humidity"].Points.AddY(temperature.Humidity);
+                Chart1.Series["Light Intensity"].Points.AddY(temperature.Light);
             }
+
         }
+
     }
 }
