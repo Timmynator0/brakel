@@ -1,39 +1,46 @@
-﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="BrakelWeb._Default" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="BrakelWeb.Temperature" %>
 
-<asp:Content runat="server" ID="FeaturedContent" ContentPlaceHolderID="FeaturedContent">
-    <section class="featured">
-        <div class="content-wrapper">
-            <hgroup class="title">
-                <h1><%: Title %>.</h1>
-                <h2>Modify this template to jump-start your ASP.NET application.</h2>
-            </hgroup>
-            <p>
-                To learn more about ASP.NET, visit <a href="http://asp.net" title="ASP.NET Website">http://asp.net</a>.
-                The page features <mark>videos, tutorials, and samples</mark> to help you get the most from ASP.NET.
-                If you have any questions about ASP.NET visit
-                <a href="http://forums.asp.net/18.aspx" title="ASP.NET Forum">our forums</a>.
-            </p>
-        </div>
-    </section>
-</asp:Content>
-<asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
-    <h3>We suggest the following:</h3>
-    <ol class="round">
-        <li class="one">
-            <h5>Getting Started</h5>
-            ASP.NET Web Forms lets you build dynamic websites using a familiar drag-and-drop, event-driven model.
-            A design surface and hundreds of controls and components let you rapidly build sophisticated, powerful UI-driven sites with data access.
-            <a href="http://go.microsoft.com/fwlink/?LinkId=245146">Learn more…</a>
-        </li>
-        <li class="two">
-            <h5>Add NuGet packages and jump-start your coding</h5>
-            NuGet makes it easy to install and update free libraries and tools.
-            <a href="http://go.microsoft.com/fwlink/?LinkId=245147">Learn more…</a>
-        </li>
-        <li class="three">
-            <h5>Find Web Hosting</h5>
-            You can easily find a web hosting company that offers the right mix of features and price for your applications.
-            <a href="http://go.microsoft.com/fwlink/?LinkId=245143">Learn more…</a>
-        </li>
-    </ol>
-</asp:Content>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+<title>"Historische Gegevens"</title>
+	</head>
+	<body>
+		<form id="PieChart" method="post" runat="server">
+			<table class="sampleTable">
+				<tr>
+					<td width="412" class="tdchart">
+							<asp:chart id="Chart1" runat="server" ImageLocation="~/TempImages/ChartPic_#SEQ(300,3)" imagetype="Png" BackColor="WhiteSmoke" BorderWidth="2" BackGradientStyle="TopBottom" BackSecondaryColor="White" Palette="BrightPastel" BorderlineDashStyle="Solid" BorderColor="26, 59, 105" Height="600px" Width="1000px">
+								<titles>
+									<asp:title ShadowColor="32, 0, 0, 0" Font="Trebuchet MS, 12pt, style=Bold" ShadowOffset="3" Text="Historische Data" ForeColor="26, 59, 105"></asp:title>
+								</titles>
+								<legends>
+									<asp:legend Enabled="True" IsTextAutoFit="False" Name="Default" BackColor="Transparent" Font="Trebuchet MS, 8.25pt, style=Bold"></asp:legend>
+								</legends>
+								<borderskin skinstyle="Emboss"></borderskin>
+								<series>
+									<asp:series Name="Temperature" ChartType="FastLine" ShadowColor="Black" BorderColor="180, 26, 59, 105"></asp:series>
+									<asp:series Name="CO2" ChartType="FastLine" ShadowColor="Black" BorderColor="180, 26, 59, 105" Color="160,32,240"></asp:series>
+                                    <asp:series Name="Humidity" ChartType="FastLine" ShadowColor="Black" BorderColor="180, 26, 59, 105" Color="224,0,0"></asp:series>
+                                    <asp:series Name="Light Intensity" ChartType="FastLine" ShadowColor="Black" BorderColor="180, 26, 59, 105" Color="124, 252,0"></asp:series>
+								</series>
+								<chartareas>
+									<asp:chartarea Name="ChartArea1" BorderColor="64, 64, 64, 64" BorderDashStyle="Solid" BackSecondaryColor="White" BackColor="Gainsboro" ShadowColor="Transparent" BackGradientStyle="TopBottom">
+										<area3dstyle Rotation="10" perspective="10" Inclination="15" IsRightAngleAxes="False" wallwidth="0" IsClustered="False"></area3dstyle>
+										<axisy linecolor="64, 64, 64, 64" IsLabelAutoFit="False">
+											<labelstyle font="Trebuchet MS, 8.25pt, style=Bold" />
+											<majorgrid linecolor="64, 64, 64, 64" />
+										</axisy>
+										<axisx linecolor="64, 64, 64, 64" IsLabelAutoFit="False">
+											<labelstyle font="Trebuchet MS, 8.25pt, style=Bold" />
+											<majorgrid linecolor="64, 64, 64, 64" />
+										</axisx>
+									</asp:chartarea>
+								</chartareas>
+							</asp:chart>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>
