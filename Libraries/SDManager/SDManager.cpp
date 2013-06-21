@@ -217,6 +217,13 @@ void SDManager::removeFile(char *file){
 }
 
 
+bool SDManager::isEmpty(){
+    
+    myFile = SD.open("offline.txt");
+    return myFile;
+}
+
+
 /*
 int SDManager::getDataSize(){
     return numberofData;
