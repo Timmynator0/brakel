@@ -24,32 +24,12 @@ BrakelZigbee bxbee;
 DBClient dbClient;
 SDManager sdManager;
 bool debug = true;
-EthernetClient client2;      
-const String savingFailed = "Saving Failed";
-const String savingSucces = "Saving Succes";
+EthernetClient client2; 
 
 void loop()
 {
   
-  
-  for(int i = 0 ; i < 100 ; i++);
-  {
-   delay(1); 
-  }
-   
-   while(client2.available()) 
-   {
-    char c = client2.read();
-    //Serial.print(c);
-
-    }
-
-
-    //dbClient.getResponse();
- 
 }
-
-
 
 void SchedulerHandler(void)
 {
@@ -71,55 +51,49 @@ void SchedulerHandler(void)
 
 byte mac[] = { 
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-  
+
 void setup()
 {
+
   boolean retVal = true;
   Serial.begin(9600);
   Serial3.begin(9600);
   Serial.println(sdManager.initSD());
-
-
-  while (Ethernet.begin(mac) == 0) {
-    Serial.println("Failed to configure Ethernet using DHCP");
-    // no point in carrying on, so do nothing forevermore:
-    delay(1000);
+  Serial.println("Fetching IP through DHCP");
+  while (Ethernet.begin(mac) == 0) 
+  {
+    Serial.println("Failed to fetch an IP, trying again in 2 seconds");
+    // try again after 2seconds
+    delay(2000);
   }
+  Serial.println("Fetched IP!");
   sdManager.setBufferManager(&bufferManager);
   dbClient.setBufferManager(&bufferManager);
   dbClient.setEthernetClient(&client2);
- 
- 
-  // dbClient.dbClientSend(); 
- 
-  //noInterrupts();
-//  Serial.println("getting ip");
-  //  while (Ethernet.begin(mac) != 1)
-  //  {
-  //    Serial.println("Error getting IP address via DHCP, trying again...");
-  //    delay(15000);
-  //  }
- // if(ntp.setup())
+
+  if(ntp.setup())
   {
-//    Serial.println("NTP done" );
-    
-   // sdManager.setNTP(&ntp); 
-//    bxbee.setNTP(&ntp);
-//  }
- 
-
-
+    Serial.println("NTP done" );
+    bxbee.setNTP(&ntp);
+  }
+Timers1.initialize(10, 1);//10 milliseconden wachten om samen met het interval van de sheduler van 100 ms het interval op 1 seonde te leggen.
+  Timers1.attachInterruptTimer1(SchedulerHandler);
   initScheduler();
-  
+
   //sdEvent
-  addSchedulerEvent(sdHandler, 5, 1); //Interval van 1 seconde en ID van 1. 
-  //tnpEvent
+  addSchedulerEvent(sdHandler, 3, 1); //Interval van 1 seconde en ID van 1. 
+
+  //ntpEvent
   addSchedulerEvent(ntpHandler, 86400, 2); //Interval van 1 dag en ID van 2. 
-  addSchedulerEvent(transmitDb, 20, 3); //Interval van 1 seconde en ID van 1.
+
+  //dbEvent
+  addSchedulerEvent(transmitDb, 30, 3); //Interval van 1 seconde en ID van 1.
+
   //lcdEvent
   //  addSchedulerEvent(lcdHandler, 2, 3); //Intervan van 1 seconde en ID van 3. 
-  Timers1.initialize(10, 1);//10 milliseconden wachten om samen met het interval van de sheduler van 100 ms het interval op 1 seonde te leggen.
-  Timers1.attachInterruptTimer1(SchedulerHandler);
+
+  
+
   //todo: Handler voor als er geen NTP verbinding was.
 
 
@@ -128,10 +102,9 @@ void setup()
   //        LCDMessage message = {"Setup succesvol.", "", SCREEN_MESSAGE, 0};
   //        LCDAddMessage(message);
   //      }
-  //interrupts();
   Serial.println("setup done");
 }
-}
+
 void serialEvent3() {
   if(zigbeeParsePacket())
   {
@@ -148,22 +121,16 @@ void serialEvent3() {
 
 void sdHandler(void)
 {
-
-    //xbee_data datading;
-    //bufferManager.read(&datading, DATABASE);
-    //bufferManager.read(&datading, SDCARD);
-    sdManager.readFromBuffer();
-    
+  Serial.print("freememory: ");
+  Serial.println(freeMemory());
+  sdManager.readFromBuffer();
 }
 
 void transmitDb(void)
-{   
-  Serial.println("freememory: ");
-  Serial.println(freeMemory());
-    
-    schedulerLock = true;
-    dbClient.dbClientSend();
-     schedulerLock = false;
+{ 
+  schedulerLock = true;
+  dbClient.dbClientSend();
+  schedulerLock = false;
 }
 
 void ntpHandler(void)
@@ -175,6 +142,8 @@ void lcdHandler(void)
 {
   LCDUpdate();
 }
+
+
 
 
 

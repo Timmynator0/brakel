@@ -276,20 +276,13 @@ DateTime RTC_Millis::now() {
 
 
 
-bool NTP::setup(){
-    
-    int DHCP2 = 0;
-    DHCP2 = Ethernet.begin(mac2);
-    Serial.println("Succes");
+bool NTP::setup()
+{
     Udp2.begin(localPort2);
     Wire.begin();
     RTC2.begin();
     nodeCount = 0;
-    if(DHCP2)
-        return sendRequest();
-    else
-        return false;
-
+    return sendRequest();
 }
 
 bool NTP::udpAvalability(){

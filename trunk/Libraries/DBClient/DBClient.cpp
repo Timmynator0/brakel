@@ -6,7 +6,6 @@
 #include "String.h"
 #define MAXBUFFERSIZE 2500
 
-bool lastConnected = false;
 const char datapointStart[] PROGMEM= "<XbeeData>";
 const char timeStart[] PROGMEM = "<Time>";
 const char timeEnd[] PROGMEM = "</Time>";
@@ -40,11 +39,6 @@ void DBClient::setEthernetClient(EthernetClient *client_)
    client = client_; 
 }
 
-void DBClient::setRTC(RTC_DS1307 *RTC)
-{
-   rtc = RTC; 
-}
-
 void DBClient::xmlBuildInit()
 {
   index = 0;
@@ -54,7 +48,6 @@ void DBClient::xmlBuildInit()
     txbuf[idx] = 0;
   }
 }
-
 
 int DBClient::xmlBuildSize()
 {
@@ -73,7 +66,6 @@ int DBClient::xmlBuildTransmitBuffer()
     client->print(txbuf[idx]);
   }
 }
-
 
 void DBClient::xmlBuildStringItem( const char *str )
 {
@@ -101,13 +93,9 @@ void DBClient::xmlBuildDataItem(int data)
   while(char c = tmp[idx++])
   {
     if( index < MAXBUFFERSIZE )
-    {
       txbuf[index++] = c;
-    }
     else
-    {
       Serial.print("xmlBuildDataItem err: buffer to small");
-    }
   }
 }
 
@@ -119,7 +107,7 @@ void DBClient::xmlBuildMessage()
     xmlBuildInit();
     
     xmlBuildStringItem( xmlStart );    
-    while(buffermanagerInstance->isEmpty(DATABASE)&& count < 10)
+    while(!buffermanagerInstance->isEmpty(DATABASE)&& count < 10)
     {
       buffermanagerInstance->read(&readpoint, DATABASE);
       xmlBuildStringItem(datapointStart);
@@ -136,77 +124,48 @@ void DBClient::xmlBuildMessage()
     xmlBuildStringItem( xmlEnd ); 
 }
 
-
 void DBClient::dbClientSend()
 {
- 
-if(!client->connected())
-{
-	if(!client->connect(server, 80))
+	if(!buffermanagerInstance->isEmpty(DATABASE))
 	{
- // if you couldn't make a connection:
-    Serial.println("connection failedldgsdkshjgs");
-    client->stop();
-	return;
+		if(!client->connected())
+		{
+			if(!client->connect(server, 80))
+			{
+				// couldn't make a connection, stopping client and aborting to free cpu time
+				Serial.println("connection failed");
+				client->stop();
+				return;
+			}
+		}
+		Serial.println("Server is Online!") ;
+		xmlBuildMessage();
+		
+		client->print("POST /Receive/WebService.asmx HTTP/1.1 \r\n");
+		client->print("User-Agent: curl/7.24.0 (x86_64-apple-darwin12.0) libcurl/7.24.0 OpenSSL/0.9.8r zlib/1.2.5 \r\n");
+		client->print("Host: 145.48.6.30 \r\n");
+		client->print("Connection:  close \r\n");
+		client->print("SOAPAction:localhost/Receive/storedata \r\n");
+		client->print("Content-Type:text/xml;charset=utf-8 \r\n");
+		client->print("Content-Length: " + (String) xmlBuildSize() + " \r\n");
+		client->print("\r\n");
+		
+		xmlBuildTransmitBuffer();
+		
+		client->print("\r\n"); 
+		client->flush();
 	}
-
- }
-
- 
-	
-	
-// Serial.println("whoop") ;
-  // if (!client->connected() && lastConnected) {
-    // Serial.println();
-    // Serial.println("disconnecting. cause: FINISHED!");
-    // client->stop();
-  // }
-
-
-//if(!client->connected())
-//{
-
-//	Serial.println("whut!?");
-//	if (client->connect(server, 80)) 
-//	{
-    Serial.println("SERVER IS ONLINE!") ;
-	xmlBuildMessage();
-    client->print("POST /Receive/WebService.asmx HTTP/1.1 \r\n");
-    client->print("User-Agent: curl/7.24.0 (x86_64-apple-darwin12.0) libcurl/7.24.0 OpenSSL/0.9.8r zlib/1.2.5 \r\n");
-    client->print("Host: 145.48.6.30 \r\n");
-	client->print("Connection:  close \r\n");
-    client->print("SOAPAction:localhost/Receive/storedata \r\n");
-    client->print("Content-Type:text/xml;charset=utf-8 \r\n");
-    client->print("Content-Length: " + (String) xmlBuildSize() + " \r\n");
-    client->print("\r\n");
-    xmlBuildTransmitBuffer();
-    client->print("\r\n"); 
-	client->flush();
- //   }
- //   else
-  //  {
-    
-    // if you couldn't make a connection:
-   // Serial.println("connection failedldgsdkshjgs");
-  //  client->stop();
-//	}
+	else
+	{
+		Serial.println("DATABASE: buffer empty");
+	}
 }
-
-	//Serial.print("is client connected?  : ");
-	//Serial.println(client->connected());
-	//lastConnected = client->connected();
-	 
-
 
 void DBClient::getResponse()
 {
-
-
- if (!client->connected()) 
- {
-  
-	client->stop();
-	Serial.println("disconnecting.");
-  }
-  
+	if (!client->connected()) 
+	{
+		client->stop();
+		Serial.println("disconnecting.");
+	}
 }

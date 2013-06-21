@@ -15,40 +15,40 @@ bool SDManager::initSD(){
 }
 bool SDManager::readFromBuffer()
 {
-	//if(initSD())
+	//if(!buff->isEmpty(SDCARD))
 	//{
-        bool result = buff->read(&buffData, SDCARD);
-        if(result){
-            writeToSD(&buffData ,false);
-        }else
-            return false;
-		return true;
+		bool result = buff->read(&buffData, SDCARD);
+		if(result)
+		{
+			 writeToSD(&buffData ,false);
+			 return true;
+		}
 	//}
-	//else return false;
+	//else
+		Serial.println("SDCARD: buffer empty");
+	return false;
 }
 
-void SDManager::writeToSD(xbee_data *xbee, bool writeOffline ){
-    
-    
+void SDManager::writeToSD(xbee_data *xbee, bool writeOffline )
+{
     char fileName[20];
-    if(xbee->timeStamp.year() != 2165){
-       
+    if(xbee->timeStamp.year() != 2165)
         sprintf(fileName,"%02d%02d%02d.txt",xbee->timeStamp.day(),xbee->timeStamp.month(),xbee->timeStamp.year());
-    }else{
+    else
         sprintf(fileName,"nontp.txt");
-    }
     if(SD.exists(fileName))
         filePathCheck = true;
     else
         filePathCheck = false;
     myFile = SD.open(fileName, FILE_WRITE);
-
-    Serial.println(fileName);
-    if(myFile){
-        Serial.println("Succes opening SD");
+    if(myFile)
+	{
+        Serial.print("Succes opening SD: ");
+		Serial.println(fileName);
         dataToFile(myFile, xbee, filePathCheck);
-        
-    }else{
+    }
+	else
+	{
         if(initSD()){
             myFile = SD.open(fileName, FILE_WRITE);
             if(myFile){
@@ -63,9 +63,8 @@ void SDManager::writeToSD(xbee_data *xbee, bool writeOffline ){
 }
 
 void SDManager::dataToFile(File file, xbee_data *xbee, bool filePath){
-   Serial.println("koekjes1"); 
-   if(!filePath){
-	Serial.println("koekjes2");
+   if(!filePath)
+   {
         file.print("UnixTime;");
         file.print("Temperatuur;");
         file.print("Licht;");
@@ -98,20 +97,6 @@ void SDManager::dataToFile(File file, xbee_data *xbee, bool filePath){
 	file.flush();
     file.close();
 }
-
-/*
-void SDManager::storeToBuffer(xbee_data data){
-    buff->store(data);
-    
-}
-
-/*void SDManager::setNTP(NTP *ntp_){
-    ntp = ntp_;
-	DateTime t = ntp->GetDateTime();
-    char result[10];
-    sprintf(result,"%02d-%02d-%04d", t.day(), t.month(), t.year());
-    Serial.println(result);
-}*/
 
 /*
 void SDManager::readFromSD(char *file){
@@ -223,7 +208,6 @@ void SDManager::writeToOffline(xbee_data *xbee){
     offlineFile.close();
 }
 
-
 void SDManager::removeFile(char *file){
     
     if(SD.exists(file)){
@@ -251,6 +235,3 @@ void SDManager::setBufferManager(BufferManager *b)
 {
     buff = b;
 }
-
-
-//http://jurgen.gaeremyn.be/index.php/arduino/reading-configuration-file-from-an-sd-card.htmlon-file-from-an-sd-card.html

@@ -1,5 +1,5 @@
 #include <Scheduler.h>
-
+#include "Arduino.h"
 bool schedulerLock = false;
 
 // 
@@ -9,6 +9,7 @@ void handleScheduler()
 {
 	if(!schedulerLock)
 	{
+	//Serial.println("scheduler handler");
 		for( unsigned char idx = 0; idx < SCHEDULER_MAX_NUMBER_OF_EVENTS; idx++ )
 		{
 			if( schedulerEvents[idx].isActive )

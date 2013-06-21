@@ -9,12 +9,10 @@ class DBClient{
 public:
 void setBufferManager(BufferManager *b);
 void setEthernetClient(EthernetClient *client);
-void setRTC(RTC_DS1307 *RTC);
 void dbClientSend();
 void getResponse();
 BufferManager *buffermanagerInstance;
 EthernetClient *client;
-RTC_DS1307 *rtc;
 
 private:
 void xmlBuildInit();
