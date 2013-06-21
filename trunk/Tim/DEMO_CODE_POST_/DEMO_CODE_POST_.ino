@@ -57,6 +57,10 @@ void setup()
     for(;;)
       ;
   }
+  while(client2){
+    Serial.println("waiting for client");
+    delay(100);
+  }
   // give the Ethernet shield a second to initialize:
   //delay(1000);
   
