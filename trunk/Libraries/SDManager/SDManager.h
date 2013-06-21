@@ -25,7 +25,7 @@ public:
     void storeToBuffer(xbee_data data);
     
     void dataToFile(File file, xbee_data *xbee,bool filePath);
-    
+    bool isEmpty();
     void setNTP(NTP ntp_);
 	
     xbee_data *getData();
