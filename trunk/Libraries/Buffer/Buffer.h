@@ -4,7 +4,7 @@
 #include "Arduino.h"
 #include "Types.h"
 
-#define bufferSize 25
+#define bufferSize 50
 enum readers
 {
 	SDCARD = 0,

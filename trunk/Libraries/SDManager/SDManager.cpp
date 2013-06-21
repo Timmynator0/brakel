@@ -15,17 +15,12 @@ bool SDManager::initSD(){
 }
 bool SDManager::readFromBuffer()
 {
-	//if(!buff->isEmpty(SDCARD))
-	//{
-		bool result = buff->read(&buffData, SDCARD);
-		if(result)
-		{
-			 writeToSD(&buffData ,false);
-			 return true;
-		}
-	//}
-	//else
-		Serial.println("SDCARD: buffer empty");
+	bool result = buff->read(&buffData, SDCARD);
+	if(result)
+	{
+		writeToSD(&buffData ,false);
+		return true;
+	}
 	return false;
 }
 
