@@ -13,8 +13,8 @@ class SDManager{
     
 public:
     bool initSD();
-
-    void readFromSD(char *file);
+    
+    void readFromSD(char *file, xbee_data *data);
     bool readFromBuffer();
     
     void removeFile(char *file);
@@ -29,14 +29,13 @@ public:
     void setNTP(NTP ntp_);
 	
     xbee_data *getData();
-    xbee_data *getOFflineData(xbee_data *data);
     
     xbee_data buffData;
     BufferManager *buff;
     
     int getDataSize();
     int count;
-
+    
 private:
     int daycount;
     int nodeCount;

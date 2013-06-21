@@ -93,8 +93,8 @@ void SDManager::dataToFile(File file, xbee_data *xbee, bool filePath){
     file.close();
 }
 
-/*
-void SDManager::readFromSD(char *file){
+
+void SDManager::readFromSD(char *file, xbee_data *data){
     
     char character;
     char results[100];
@@ -185,7 +185,8 @@ void SDManager::readFromSD(char *file){
     else
         Serial.println("File Can not be deleted");
 
-}*/
+
+}
 
 void SDManager::writeToOffline(xbee_data *xbee){
     if(SD.exists("offline.txt"))
@@ -218,20 +219,20 @@ bool SDManager::isOfflineEmpty()
 }
 
 
-/*
+
 int SDManager::getDataSize(){
     return numberofData;
 }
-
+/*
 xbee_data *SDManager::getData(){
     return data;
 }
 */
 
-xbee_data *SDManager::getOFflineData(xbee_data *data){
-    data = &offlineData;
-    return data;
-}
+//xbee_data *SDManager::getOFflineData(){
+//   
+//    return offlineData;
+//}
 
 void SDManager::setBufferManager(BufferManager *b)
 {
