@@ -25,12 +25,12 @@ class Database
         $this->database     = $database;
         $this->charset      = 'utf8';
 
-        $this->connection   = mysql_connect($this->host, $this->user, $this->password);
+        $this->connection   = mssql_connect($this->host, $this->user, $this->password);
 
         if (!$this->connection)
             die('Er kan geen verbinding worden gemaakt met de database.');
 
-        $this->select       = mysql_select_db($this->database, $this->connection);
+        $this->select       = mssql_select_db($this->database, $this->connection);
         if (!$this->select)
             die('Er kon geen database geselecteerd worden.');
 
