@@ -12,7 +12,9 @@ void setEthernetClient(EthernetClient *client);
 void dbClientSend();
 void getResponse();
 BufferManager *buffermanagerInstance;
+SDManager	*sdmanagerInstance;
 EthernetClient *client;
+bool sendSucces = true;;
 
 private:
 void xmlBuildInit();

@@ -34,6 +34,11 @@ void DBClient::setBufferManager(BufferManager *b)
     buffermanagerInstance = b;
 }
 
+void DBClient::setSDManager(SDManager *sd)
+{
+    sdmanagerInstance = sd;
+}
+
 void DBClient::setEthernetClient(EthernetClient *client_)
 {
    client = client_; 
@@ -107,19 +112,26 @@ void DBClient::xmlBuildMessage()
     xmlBuildInit();
     
     xmlBuildStringItem( xmlStart );    
-    while(!buffermanagerInstance->isEmpty(DATABASE)&& count < 10)
+    while(!(buffermanagerInstance->isEmpty(DATABASE)&&sdmanagerInstance->isOfflineEmpty())&& count < 10)
     {
-      buffermanagerInstance->read(&readpoint, DATABASE);
-      xmlBuildStringItem(datapointStart);
-      xmlBuildStringItem(timeStart); xmlBuildDataItem(readpoint.timeStamp.unixtime()); xmlBuildStringItem(timeEnd);      
-      xmlBuildStringItem(temperatureStart); xmlBuildDataItem(readpoint.temperature); xmlBuildStringItem(temperatureEnd);
-      xmlBuildStringItem(CO2Start); xmlBuildDataItem(readpoint.CO2); xmlBuildStringItem(CO2End);
-      xmlBuildStringItem(humidityStart); xmlBuildDataItem(readpoint.humidity); xmlBuildStringItem(humidityEnd);
-      xmlBuildStringItem(lightStart); xmlBuildDataItem(readpoint.lightIntensity); xmlBuildStringItem(lightEnd);
-      xmlBuildStringItem(NodeAdressLowStart); xmlBuildDataItem(readpoint.nodeAddrLow); xmlBuildStringItem(NodeAdressLowEnd);
-      xmlBuildStringItem(NodeAdressHighStart); xmlBuildDataItem(readpoint.nodeAddrHigh); xmlBuildStringItem(NodeAdressHighEnd); 
-      xmlBuildStringItem(datapointEnd);
-      count++;    
+		if(buffermanagerInstance->isEmpty(DATABASE))
+		{
+			buffermanagerInstance->read(&readpoint, DATABASE);
+		}
+		else
+		{
+			sdmanagerInstance->readFromSD("offline.txt", &readpoint);
+		}
+		xmlBuildStringItem(datapointStart);
+		xmlBuildStringItem(timeStart); xmlBuildDataItem(readpoint.timeStamp.unixtime()); xmlBuildStringItem(timeEnd);      
+		xmlBuildStringItem(temperatureStart); xmlBuildDataItem(readpoint.temperature); xmlBuildStringItem(temperatureEnd);
+		xmlBuildStringItem(CO2Start); xmlBuildDataItem(readpoint.CO2); xmlBuildStringItem(CO2End);
+		xmlBuildStringItem(humidityStart); xmlBuildDataItem(readpoint.humidity); xmlBuildStringItem(humidityEnd);
+		xmlBuildStringItem(lightStart); xmlBuildDataItem(readpoint.lightIntensity); xmlBuildStringItem(lightEnd);
+		xmlBuildStringItem(NodeAdressLowStart); xmlBuildDataItem(readpoint.nodeAddrLow); xmlBuildStringItem(NodeAdressLowEnd);
+		xmlBuildStringItem(NodeAdressHighStart); xmlBuildDataItem(readpoint.nodeAddrHigh); xmlBuildStringItem(NodeAdressHighEnd); 
+		xmlBuildStringItem(datapointEnd);
+		count++;    
     }
 	Serial.print("sending ");
 	Serial.print(count);
@@ -138,6 +150,13 @@ void DBClient::dbClientSend()
 				// couldn't make a connection, stopping client and aborting to free cpu time
 				Serial.println("connection failed");
 				client->stop();
+				while(!buffermanagerInstance->isEmpty(DATABASE))
+				{ 
+					xbee_data data;
+					read(data, DATABASE);
+					sdmanagerInstance->writeToOffline(data);
+				}
+				sendSucces = false;
 				return;
 			}
 		}
