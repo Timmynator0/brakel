@@ -1,3 +1,5 @@
+//#define DB //comment to disable DATABASE
+
 #include <BrakelZigbee.h>
 #include <Buffer.h>
 #include <BufferManager.h>
@@ -15,16 +17,25 @@
 #include <String.h>
 #include <LCD.h>
 #include <MemoryFree.h>
+#ifdef DB
 #include <DBClient.h>
+#endif
 #define SD_INTERVAL 100
+
+
 
 NTP ntp;
 BufferManager bufferManager;
 BrakelZigbee bxbee;
-DBClient dbClient;
 SDManager sdManager;
-bool debug = true;
+#ifdef DB
+DBClient dbClient;
+
 EthernetClient client2; 
+#endif
+
+bool debug = true;
+
 
 void loop()
 {
@@ -54,7 +65,6 @@ byte mac[] = {
 
 void setup()
 {
-
   boolean retVal = true;
   Serial.begin(9600);
   Serial3.begin(9600);
@@ -63,13 +73,15 @@ void setup()
   while (Ethernet.begin(mac) == 0) 
   {
     Serial.println("Failed to fetch an IP, trying again in 2 seconds");
-    // try again after 2seconds
+    // try again after 2-seconds
     delay(2000);
   }
   Serial.println("Fetched IP!");
   sdManager.setBufferManager(&bufferManager);
+  #ifdef DB
   dbClient.setBufferManager(&bufferManager);
-  dbClient.setEthernetClient(&client2);
+    dbClient.setEthernetClient(&client2);
+  #endif
 
   if(ntp.setup())
   {
@@ -81,21 +93,20 @@ Timers1.initialize(10, 1);//10 milliseconden wachten om samen met het interval v
   initScheduler();
 
   //sdEvent
-  addSchedulerEvent(sdHandler, 3, 1); //Interval van 1 seconde en ID van 1. 
+  addSchedulerEvent(sdHandler, 1, 1); //Interval van 1 seconde en ID van 1. 
 
   //ntpEvent
   addSchedulerEvent(ntpHandler, 86400, 2); //Interval van 1 dag en ID van 2. 
 
   //dbEvent
-  addSchedulerEvent(transmitDb, 30, 3); //Interval van 1 seconde en ID van 1.
+ #ifdef DB
+ addSchedulerEvent(transmitDb, 30, 3); //Interval van 1 seconde en ID van 1.
+ #endif
 
   //lcdEvent
   //  addSchedulerEvent(lcdHandler, 2, 3); //Intervan van 1 seconde en ID van 3. 
 
-  
-
   //todo: Handler voor als er geen NTP verbinding was.
-
 
   //     if(retVal)
   //      {
@@ -105,7 +116,8 @@ Timers1.initialize(10, 1);//10 milliseconden wachten om samen met het interval v
   Serial.println("setup done");
 }
 
-void serialEvent3() {
+void serialEvent3() 
+{
   if(zigbeeParsePacket())
   {
     if(!bufferManager.store(zigbeeData))
@@ -125,14 +137,14 @@ void sdHandler(void)
   Serial.println(freeMemory());
   sdManager.readFromBuffer();
 }
-
+#ifdef DB
 void transmitDb(void)
 { 
   schedulerLock = true;
   dbClient.dbClientSend();
   schedulerLock = false;
 }
-
+#endif
 void ntpHandler(void)
 {
   ntp.sendRequest();
