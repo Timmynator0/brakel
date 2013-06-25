@@ -219,3 +219,9 @@ void LCDBeep()
   Serial1.write(0xE4);
   Serial.println("Beeped");
 }
+
+void LCDWrite(String message)
+{
+    Serial1.write(0x0C);
+	Serial1.write(message);
+}
