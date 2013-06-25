@@ -25,3 +25,4 @@ bool LCDRemoveLCDMessage(String oldLCDMessage);
 bool LCDAddBrokenNode(char* newNode);
 bool LCDRemoveBrokenNode(String oldNode);
 void LCDBeep();
+void LCDWrite(String message);
