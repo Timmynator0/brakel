@@ -73,10 +73,10 @@ namespace BrakelWeb.DAL
                 {
                     db.DataPoints.Add(data);
                 }
-                foreach (Node node in nodeList)
-                {
-                    db.Nodes.Add(node);
-                }
+                //foreach (Node node in nodeList)
+                //{
+                 //   db.Nodes.Add(node);
+                //}
 
                 try
                 {
