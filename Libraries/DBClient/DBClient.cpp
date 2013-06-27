@@ -4,6 +4,8 @@
 #include "Ethernet.h"
 #include "BufferManager.h"
 #include "String.h"
+#include <SDManager.h>
+#include "SD.h"
 #define MAXBUFFERSIZE 2500
 
 const char datapointStart[] PROGMEM= "<XbeeData>";
@@ -26,7 +28,7 @@ const char xmlStart[] PROGMEM = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/20
 const char xmlEnd[] PROGMEM = " </XbeeDataPoints> </storedata> </soap:Body></soap:Envelope>";
 char txbuf[MAXBUFFERSIZE] = {'\0'};
 int index = 0;
-IPAddress server(145,48,6,30); // the IP adress of the ASP Server
+IPAddress server(145,48,6,30); // the IP adress of the ASP Server ( currenc is testing server! )
 
 
 void DBClient::setBufferManager(BufferManager *b)
@@ -86,13 +88,15 @@ void DBClient::xmlBuildStringItem( const char *str )
     }
   }
 }
-
-void DBClient::xmlBuildDataItem(int data)
+bool time = false;
+void DBClient::xmlBuildDataItem(int32_t data)
 {  
   // convert data to char[]
-  char tmp[10] = {'\0'};
-  itoa(data,tmp,10);
-    
+  char tmp[11] = {'\0'};
+ if(time)
+ sprintf(tmp,"%lu",(unsigned long)data);  
+ else
+ itoa(data,tmp,10);
   // print in buffer
   int idx = 0;
   while(char c = tmp[idx++])
@@ -112,18 +116,19 @@ void DBClient::xmlBuildMessage()
     xmlBuildInit();
     
     xmlBuildStringItem( xmlStart );    
-    while(!(buffermanagerInstance->isEmpty(DATABASE)&&sdmanagerInstance->isOfflineEmpty())&& count < 10)
+    while(!buffermanagerInstance->isEmpty(DATABASE)&&/*sdmanagerInstance->isOfflineEmpty()&&*/ count < 10)
     {
-		if(buffermanagerInstance->isEmpty(DATABASE))
+		if(!buffermanagerInstance->isEmpty(DATABASE))
 		{
 			buffermanagerInstance->read(&readpoint, DATABASE);
 		}
 		else
 		{
-			sdmanagerInstance->readFromSD("offline.txt", &readpoint);
+			// tmp placeholder!!!
+			//sdmanagerInstance->readFromSD("offline.txt", &readpoint);
 		}
 		xmlBuildStringItem(datapointStart);
-		xmlBuildStringItem(timeStart); xmlBuildDataItem(readpoint.timeStamp.unixtime()); xmlBuildStringItem(timeEnd);      
+		xmlBuildStringItem(timeStart);time = true; xmlBuildDataItem(readpoint.timeStamp.unixtime());time = false; xmlBuildStringItem(timeEnd);      
 		xmlBuildStringItem(temperatureStart); xmlBuildDataItem(readpoint.temperature); xmlBuildStringItem(temperatureEnd);
 		xmlBuildStringItem(CO2Start); xmlBuildDataItem(readpoint.CO2); xmlBuildStringItem(CO2End);
 		xmlBuildStringItem(humidityStart); xmlBuildDataItem(readpoint.humidity); xmlBuildStringItem(humidityEnd);
@@ -133,10 +138,11 @@ void DBClient::xmlBuildMessage()
 		xmlBuildStringItem(datapointEnd);
 		count++;    
     }
+	 xmlBuildStringItem( xmlEnd ); 
 	Serial.print("sending ");
 	Serial.print(count);
 	Serial.println(" nodes");
-    xmlBuildStringItem( xmlEnd ); 
+   
 }
 
 void DBClient::dbClientSend()
@@ -150,13 +156,13 @@ void DBClient::dbClientSend()
 				// couldn't make a connection, stopping client and aborting to free cpu time
 				Serial.println("connection failed");
 				client->stop();
-				while(!buffermanagerInstance->isEmpty(DATABASE))
-				{ 
-					xbee_data data;
-					read(data, DATABASE);
-					sdmanagerInstance->writeToOffline(data);
-				}
-				sendSucces = false;
+			//	while(!buffermanagerInstance->isEmpty(DATABASE))
+			//	{ 
+			//		xbee_data data;
+					//read(data, DATABASE);
+					//sdmanagerInstance->writeToOffline(data);
+			//	}
+				//sendSucces = false;
 				return;
 			}
 		}
