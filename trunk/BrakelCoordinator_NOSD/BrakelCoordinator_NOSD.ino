@@ -1,4 +1,4 @@
-//#define DB //comment to disable DATABASE
+#define DB //comment to disable DATABASE
 #define SDC //comment to disable SDCARD
 #include <BrakelZigbee.h>
 #include <Buffer.h>

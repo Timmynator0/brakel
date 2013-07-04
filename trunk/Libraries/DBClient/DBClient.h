@@ -13,7 +13,6 @@ void setBufferManager(BufferManager *b);
 void setSDManager(SDManager *sd);
 void setEthernetClient(EthernetClient *client);
 void dbClientSend();
-void getResponse();
 BufferManager *buffermanagerInstance;
 SDManager *sdmanagerInstance;
 EthernetClient *client;
