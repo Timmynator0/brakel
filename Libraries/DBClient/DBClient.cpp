@@ -28,6 +28,8 @@ const char xmlStart[] PROGMEM = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/20
 const char xmlEnd[] PROGMEM = " </XbeeDataPoints> </storedata> </soap:Body></soap:Envelope>";
 char txbuf[MAXBUFFERSIZE] = {'\0'};
 int index = 0;
+byte mac3[] = { 
+  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 IPAddress server(145,48,6,30); // the IP adress of the ASP Server ( currenc is testing server! )
 
 
@@ -122,11 +124,6 @@ void DBClient::xmlBuildMessage()
 		{
 			buffermanagerInstance->read(&readpoint, DATABASE);
 		}
-		else
-		{
-			// tmp placeholder!!!
-			//sdmanagerInstance->readFromSD("offline.txt", &readpoint);
-		}
 		xmlBuildStringItem(datapointStart);
 		xmlBuildStringItem(timeStart);time = true; xmlBuildDataItem(readpoint.timeStamp.unixtime());time = false; xmlBuildStringItem(timeEnd);      
 		xmlBuildStringItem(temperatureStart); xmlBuildDataItem(readpoint.temperature); xmlBuildStringItem(temperatureEnd);
@@ -153,17 +150,22 @@ void DBClient::dbClientSend()
 		{
 			if(!client->connect(server, 80))
 			{
+				
+				Ethernet.begin(mac3); // try to reset connection
+				
 				// couldn't make a connection, stopping client and aborting to free cpu time
 				Serial.println("connection failed");
 				client->stop();
-			//	while(!buffermanagerInstance->isEmpty(DATABASE))
-			//	{ 
-			//		xbee_data data;
-					//read(data, DATABASE);
-					//sdmanagerInstance->writeToOffline(data);
-			//	}
+				while(!buffermanagerInstance->isEmpty(DATABASE))
+				{ 
+					xbee_data data;
+					buffermanagerInstance->read(data, DATABASE);
+				
+				}
 				//sendSucces = false;
 				return;
+				
+				
 			}
 		}
 		Serial.println("Server is Online!") ;
@@ -172,7 +174,7 @@ void DBClient::dbClientSend()
 		client->print("POST /Receive/WebService.asmx HTTP/1.1 \r\n");
 		client->print("User-Agent: curl/7.24.0 (x86_64-apple-darwin12.0) libcurl/7.24.0 OpenSSL/0.9.8r zlib/1.2.5 \r\n");
 		client->print("Host: 145.48.6.30 \r\n");
-		client->print("Connection:  keep-alive \r\n");
+		client->print("Connection:  Close \r\n");
 		client->print("SOAPAction:localhost/Receive/storedata \r\n");
 		client->print("Content-Type:text/xml;charset=utf-8 \r\n");
 		client->print("Content-Length: " + (String) xmlBuildSize() + " \r\n");
@@ -189,11 +191,3 @@ void DBClient::dbClientSend()
 	}
 }
 
-void DBClient::getResponse()
-{
-	if (!client->connected()) 
-	{
-		client->stop();
-		Serial.println("disconnecting.");
-	}
-}
