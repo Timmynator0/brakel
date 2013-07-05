@@ -7,7 +7,7 @@ namespace BrakelWeb.Models
     {
 
         public int Id { get; set; }
-        public int Time { get; set; }
+        public long Time { get; set; }
         public Nullable<int> Temperature { get; set; }
         public Nullable<int> CO2 { get; set; }
         public Nullable<int> Humidity { get; set; }

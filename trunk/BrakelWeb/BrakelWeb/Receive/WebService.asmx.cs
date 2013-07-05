@@ -7,6 +7,7 @@ using System.Web.Script.Services;
 using System.Web.Script.Serialization;
 using BrakelWeb.Models;
 using BrakelWeb.DAL;
+
 namespace BrakelWeb.Receive
 {
     /// <summary>
@@ -33,10 +34,10 @@ namespace BrakelWeb.Receive
             foreach(XbeeData data in XbeeDataPoints)
             {
 
-               nodeList.Add(new Node { Location = "default", 
-                                       NodeAdress = data.NodeAdressHigh + data.NodeAdressLow, 
-                                       ObjectActive = true, 
-                                       Type = 1}) ;
+             //  nodeList.Add(new Node { Location = "default", 
+             //                          NodeAdress = data.NodeAdressHigh + data.NodeAdressLow, 
+              //                         ObjectActive = true, 
+               //                        Type = 1}) ;
 
 
                 dataPointList.Add( new DataPoint { Time = data.Time, Temperature = data.Temperature,
